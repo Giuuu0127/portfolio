@@ -994,8 +994,6 @@
             <li>즉시 효과는 Skill_Effect Table의 <strong>"Effect1 ~ Effect2 컬럼"</strong>을 통해 정의한다.
                 <ul>
                     <li>아이템에 연결된 Skill_Effect의 <strong>"Effect1 ~ Effect2 컬럼"</strong>을 참조, 즉시 효과가 적용되게 만든다.</li>
-                    <li>Effect 컬럼의 값이 EA_Buff일 경우.</li>
-                    <li>또한, EA_Buff와 연계되는 컬럼인 Subject 값도 적용 받을 수 있게 만들어 지속 효과를 정의할 수 있게 만든다.</li>
                 </ul>
             </li>
         </ul>
@@ -1012,14 +1010,9 @@
             <li>지속 효과는 즉시 효과와 동일하게 <strong>"Effect1 ~ Effect2 컬럼"</strong>을 통해 정의한다.
                 <ul>
                     <li>아이템에 연결된 Skill_Effect Table의 <strong>"Effect1 ~ Effect2 컬럼"</strong>을 참조, 지속 효과가 적용되게 만든다.</li>
-                    <li>Effect 컬럼의 값이 EA_Buff일 경우.</li>
-                    <li>또한, EA_Buff와 연계되는 컬럼인 Subject 값도 적용 받을 수 있게 만들어 지속 효과를 정의할 수 있게 만든다.</li>
                 </ul>
             </li>
             <li>지속 효과의 경우 적용된 기사단이 <strong>"사망 혹은 귀환할 경우 적용된 효과"</strong>가 제거된다.
-                <div class="warning-box">
-                    <strong>⚠️</strong> 주둔의 경우 전투를 할 수 있는 연장선으로 판단하며, 효과가 유지된다.
-                </div>
             </li>
         </ul>
         
@@ -1148,8 +1141,8 @@
         <h2>11. Skill_Effect 테이블 데이터 추가</h2>
         <img src="Portfolio_Img\SqaudItem\FloatingResInfoData.png" width="1000", height="auto">     
         <p>기사단 아이템을 사용했을 때 기사단에게 어떤 플로팅을 적용할지 결정하는 역할의 신규 컬럼이다.</p>
-        
-        <ul>
+		<ul>
+            <li>"SkillEffect.xlsx -> Data Sheet -> FloatingData Column"을 추가한다.</li>
             <li>첨부된 그림과 같이 에디터 테이블인 FloatingResInfoData에 정의된 <strong>"행 이름"</strong>을 작성한다.
                 <ul>
                     <li>값이 없을 경우 플로팅을 띄우지 않는 Skill_Effect 데이터로 판단한다.</li>
