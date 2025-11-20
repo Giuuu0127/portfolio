@@ -798,6 +798,13 @@
                 <li>상태이상의 지속시간이 만료되면 최대 체력이 본래 값으로 돌아간다.</li>
             </ul>
         </div>
+		<div class="exception-box">
+            <p><strong>예외 처리</strong></p>
+            <p><strong>"percent_inc / percent_dec"</strong>계산 시 결과가 소수이면 소수점 이하는 버림처리한다.</p>
+            <ul>
+                <li>PeriodEffect로 인해 HP가 100.9가 증가될 경우 버림 처리되어 100이 증가된다.</li>
+            </ul>
+        </div>
         
         <h4>5.6.5. 복수 적용 예시</h4>        
         <img src="Portfolio_Img\StatusEffect\Ex_Apply_StatusEffects.png" width="800", height="auto">                        
@@ -971,4 +978,5 @@
 </body>
 
 </html>
+
 
