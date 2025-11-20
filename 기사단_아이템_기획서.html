@@ -1,0 +1,1361 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>기사단 아이템 기획서</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
+            line-height: 1.8;
+            color: #333;
+            background-color: #f5f5f5;
+            /* 고정 헤더(60px) 때문에 상단 패딩을 조정합니다. (60px + 20px = 80px) */
+            padding: 80px 20px 20px 20px;
+        }
+
+        /* 새로 추가된 고정 헤더 스타일 */
+        .fixed-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: #2563EB; /* 어두운 배경색 */
+            color: white;
+            padding: 15px 40px;
+            z-index: 1000; /* 콘텐츠 위로 오도록 설정 */
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            height: 60px;
+            display: flex;
+            align-items: center;
+        }
+
+        .back-link {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1em;
+            transition: color 0.2s;
+        }
+
+        .back-link:hover {
+            color: #3498db; /* 마우스 오버 시 파란색으로 변경 */
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 8px; /* 경계선을 둥글게 추가 */
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 15px;
+        }
+        
+        h2 {
+            font-size: 1.8em;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            color: #2c3e50;
+            background: #ecf0f1;
+            padding: 15px;
+            border-radius: 5px;
+        }
+        
+        h3 {
+            font-size: 1.4em;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            color: #34495e;
+            border-left: 4px solid #3498db;
+            padding-left: 15px;
+        }
+        
+        h4 {
+            font-size: 1.2em;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            color: #555;
+        }
+        
+        /* 테이블 스타일 */
+        .info-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+        }
+        
+        .info-table th {
+            background: #3498db;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: bold;
+        }
+        
+        .info-table td {
+            padding: 12px;
+            border: 1px solid #ddd;
+        }
+        
+        .info-table tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+        
+        /* 박스 스타일 */
+        .info-box {
+            background: #e8f4f8;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        
+        .warning-box {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        
+        .lightbulb-box {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        
+        /* 리스트 스타일 */
+        ul, ol {
+            margin: 15px 0 15px 30px;
+        }
+        
+        li {
+            margin: 8px 0;
+        }
+        
+        /* 기타 요소 */
+        .image-placeholder {
+            background: #e9ecef;
+            border: 2px dashed #adb5bd;
+            padding: 40px;
+            text-align: center;
+            margin: 20px 0;
+            color: #6c757d;
+            border-radius: 5px;
+        }
+        
+        .process-diagram {
+            background: #f8f9fa;
+            border: 2px solid #dee2e6;
+            padding: 30px;
+            margin: 20px 0;
+            text-align: center;
+            border-radius: 5px;
+        }
+        
+        .highlight {
+            background: #fff3cd;
+            padding: 2px 5px;
+            font-weight: bold;
+        }
+        
+        .code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            color: #e83e8c;
+        }
+        
+        .content-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        .content-table th,
+        .content-table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        
+        .content-table th {
+            background: #6c757d;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .content-table tr:hover {
+            background: #f5f5f5;
+        }
+
+        /* ---------------------------------------------------- */
+        /* ⚡️ [새로 추가된 시스템 설계 요약 2컬럼 스타일] */
+        /* ---------------------------------------------------- */
+        .summary-section h2 {
+            /* 기존 h2 스타일을 그대로 사용 */
+            margin-top: 40px;
+            margin-bottom: 20px;
+        }
+        
+        .summary-container {
+            display: flex;
+            gap: 40px;
+            padding: 25px;
+            border: 1px solid #ddd; /* 경계선 추가 */
+            border-radius: 6px;
+            background-color: #fcfcfc; /* 내용 박스 배경 */
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .column-box {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .column-title {
+            /* 기존 h3 스타일을 재정의하여 작은 제목처럼 사용 */
+            font-size: 1.3em;
+            color: #34495e;
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-weight: bold;
+            border-left: none; /* h3의 왼쪽 바를 제거 */
+            border-bottom: 2px solid #ecf0f1; /* 구분선 */
+            padding-left: 0;
+            padding-bottom: 5px;
+        }
+
+        .check-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .check-list li {
+            padding: 6px 0;
+            font-size: 1em;
+            color: #555;
+            position: relative;
+            padding-left: 25px;
+            line-height: 1.5;
+        }
+
+        .check-list li::before {
+            content: '✓';
+            color: #3498db; /* 테마 색상 (#3498db) 사용 */
+            font-weight: bold;
+            font-size: 1.2em;
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        
+        /* 모바일 대응 */
+        @media (max-width: 768px) {
+            .summary-container {
+                flex-direction: column;
+                gap: 20px;
+            }
+        }
+        /* ---------------------------------------------------- */
+        /* ⚡️ [시스템 설계 요약 2컬럼 스타일 끝] */
+        /* ---------------------------------------------------- */
+
+        /* PDF/인쇄 최적화를 위해 추가된 스타일 시작 */
+        @media print {
+            /* 1. 배경 및 그림자 제거: 잉크/토너 절약 및 깔끔한 출력 */
+            body {
+                background-color: white !important;
+                padding-top: 20px !important; /* 인쇄 시 고정 헤더 제거 후 일반 패딩으로 복구 */
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            .fixed-header {
+                display: none; /* 인쇄 시 고정 헤더 숨김 */
+            }
+
+            .container {
+                box-shadow: none !important;
+                padding: 40px !important; 
+                width: 100%;
+                max-width: none;
+            }
+            
+            /* 2. 섹션 배경 및 경계선 조정 */
+            h2 {
+                background: none !important;
+                padding: 10px 0 !important;
+                border-radius: 0 !important;
+            }
+            
+            .info-box, .warning-box, .lightbulb-box {
+                background: none !important;
+                padding: 15px 0 !important;
+                border: 1px solid #ddd !important;
+                border-left: 4px solid #3498db !important;
+            }
+            .warning-box {
+                 border-left-color: #ffc107 !important;
+            }
+            .lightbulb-box {
+                 border-left-color: #28a745 !important;
+            }
+
+            /* 2-1. 시스템 요약 박스 인쇄 스타일 조정 */
+            .summary-container {
+                background-color: white !important;
+                box-shadow: none !important;
+                border: 1px solid #ccc !important;
+            }
+
+            /* 3. 테이블 스타일 조정: 명확한 경계 및 밝은 배경 */
+            .info-table, .content-table {
+                border: 1px solid #333 !important;
+                page-break-inside: avoid;
+            }
+            .info-table th, .content-table th {
+                background: #eee !important;
+                color: #333 !important;
+            }
+            .info-table td, .content-table td {
+                border-color: #ccc !important;
+            }
+            .info-table tr:nth-child(even) {
+                background: white !important;
+            }
+            
+            /* 4. 이미지 및 다이어그램 플레이스홀더 처리 */
+            .image-placeholder, .process-diagram {
+                background: #f8f8f8 !important;
+                border: 1px solid #ccc !important;
+                padding: 15px !important;
+                page-break-inside: avoid;
+            }
+
+            /* 5. 텍스트 하이라이트/코드 색상 조정 */
+            .highlight {
+                color: black !important;
+                background: #f0f0f0 !important;
+            }
+            .code {
+                color: #333 !important;
+                border: 1px solid #eee;
+            }
+            
+            /* 6. 페이지 나누기 제어 (가장 중요) */
+            h1, h2, h3, h4 {
+                page-break-after: avoid;
+            }
+            
+            ul, ol, p, table {
+                page-break-inside: avoid;
+            }
+        }
+        /* PDF/인쇄 최적화를 위해 추가된 스타일 끝 */
+
+    </style>
+</head>
+<body>
+    <div class="fixed-header">
+        <a href="Index2.html" class="back-link">
+            &#9664; 포트폴리오 페이지로 돌아가기
+        </a>
+    </div>
+
+    <div class="container">
+        <div class="info-box">
+            <p><strong>ℹ️ 택탄 프로젝트를 진행하며 작성한 "기사단 아이템" 관련 시스템 문서입니다.</strong></p>
+            <ul>
+                <li>기존 회사에서 작성한 내용을 재구성해 만든 문서입니다.</li>
+                <li>포트폴리오 제공을 위해 기존 기획서에 문제 소지가 될만한 내용은 일괄 편집했습니다.</li>
+                <li>실제 개발한 내용도 목표한 바를 충분히 수행했으며, 완성도 높게 나온 시스템입니다.</li>
+            </ul>
+        </div>
+        
+        <!-- ⚡️ 새로 추가된 시스템 설계 요약 섹션 시작 -->
+        <div class="summary-section">
+            <h2>시스템 설계 요약</h2>
+            <div class="summary-container">
+                
+                <div class="column-box">
+                    <h4 class="column-title">핵심 설계 포인트</h4>
+                    <ul class="check-list">
+                        <li>기존 Skill_Effect 시스템 활용한 확장성</li>
+                        <li>데이터 기반 유연한 조건/효과 정의</li>
+                        <li>모듈화된 구조로 유지보수 용이</li>
+                        <li>직관적인 UI/UX 설계</li>
+                    </ul>
+                </div>
+                
+                <div class="column-box">
+                    <h4 class="column-title">기대 효과</h4>
+                    <ul class="check-list">
+                        <li>필드 플레이 효율성 증대</li>
+                        <li>전략적 깊이 추가</li>
+                        <li>신규 보상 콘텐츠 확보</li>
+                        <li>자원 소모처 다양화</li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+        <!-- ⚡️ 새로 추가된 시스템 설계 요약 섹션 끝 -->
+
+        
+        <h2>1. 기사단 아이템이란?</h2>
+        
+        <img src="Portfolio_Img\SqaudItem\SquadItem_Simple_Process.png" width="800", height="auto">
+        
+        <p>필드에 출진한 부대가 아이템을 소모해 [특수한 효과]를 얻을 수 있으며, 이를 [기사단 아이템]이라 정의한다.</p>
+        
+        <ul>
+            <li>모든 기사단에게 "아이템 슬롯"을 추가, 출진 시 어떤 아이템을 배정할지 결정한다.
+                <ul>
+                    <li>출진한 부대 영웅의 레벨에 따라 <strong>"최대 n개의 슬롯"</strong>을 지닐 수 있다.</li>
+                </ul>
+            </li>
+            <li>출진 후 부대가 특정 조건에 만족할 경우 아이템을 사용한다.
+                <ul>
+                    <li>ex - 전투 시작 시 / 남은 병력이 N% 미만일 경우 등..</li>
+                </ul>
+            </li>
+            <li>사용 후 특수한 효과를 적용 받으며, 동시에 인벤토리에서 아이템이 소모된다.
+                <ul>
+                    <li>ex - 공격력 증가 / 방어력 증가 / 병사 회복 등..</li>
+                </ul>
+            </li>
+        </ul>
+        
+        <ul>
+            <li>해당 아이템은 기사단만 사용할 수 있는 아이템이며, [주둔 / 수성 / 공격대]에선 아이템 사용을 지원하지 않는다.
+                <ul>
+                    <li>전략 병기(드래곤 / 공성 / 마법병기)에도 기사단 소모성 아이템을 지원하지 않는다.</li>
+                </ul>
+            </li>
+        </ul>
+        
+        <h2>2. 목적</h2>
+        
+        <p>[기사단 아이템]을 통해 유저가 필드 플레이를 더 효율적으로 만들어주는 장치로 동작되게 만든다.</p>
+        
+        <ul>
+            <li>사용 시 필드 상 기사단에게 다양한 효과를 부여, 기사단의 행동을 더 효율적으로 만들어 준다.
+                <div class="lightbulb-box">
+                    <strong>💡</strong> 기사단의 능력 향상 / 부상 회복 / 부시 시야 제공(Like. 와드) / 채집량 증가 / 건설 속도 증가 등...
+                </div>
+            </li>
+            <li>기사단이 할 수 있는 모든 행동에 추가적인 효과를 부여하는 역할을 수행할 수 있게 구조화한다.</li>
+            <li>신규 소모 아이템을 추가 함으로써 다음과 같은 효과를 기대한다.
+                <div class="lightbulb-box">
+                    <strong>💡</strong> 인게임 신규 보상으로 활용 / 자원 소모처 / 새로운 전략 / 성장 요소 등..
+                </div>
+            </li>
+        </ul>
+        
+        <h2>3. 개발 목표</h2>
+        
+        <h3>3.1. 필드 플레이 포커싱</h3>
+        
+        <p>기사단의 [필드 플레이]에 포커싱해 기사단 아이템을 디자인한다.</p>
+        
+        <ul>
+            <li>필드 플레이 : 전투 / 채집 / 건설 / 행군 등...</li>
+            <li>기사단이 필드에서 할 수 있는 다양한 행동에 효율을 [상승 / 보조 해주는 역할]로 활용할 수 있게 만든다.
+                <ul>
+                    <li>지속 시간 / 주기 / 효과 등을 정의하는 Skill_Buff 시스템을 활용해 정의해보자.</li>
+                </ul>
+            </li>
+            <li>또한, 각 행동에 맞는 [아이템 사용 조건]을 정의, 이를 데이터로 적용할 수 있게 구조화한다.
+                <div class="lightbulb-box">
+                    <strong>💡</strong> ItemData에 Skill데이터를 연결, Skill의 핵심 매커니즘인 <strong>"행동 / 조건 / 효과"</strong>의 기능을 그대로 차용해 쓸 수 있게 만든다.
+                </div>
+            </li>
+        </ul>
+        
+        <h3>3.2. UI 장치 추가</h3>
+        
+        <p>어떤 아이템을 슬롯에 배정했고 사용했는지 유저에게 안내하는 [UI 장치]를 추가한다.</p>
+        
+        <ul>
+            <li>부대 편성 UI에 아이템 슬롯을 추가, 아이템을 기사단에 배정 / 사용할 수 있게 만든다.</li>
+            <li>필드 상에서도 기사단이 현재 지니고 있는 아이템이 무엇이고 사용 유무를 확인할 수 있게 만든다.</li>
+        </ul>
+        
+        <h3>3.3. 연출</h3>
+        
+        <p>기사단이 아이템 사용 시 이를 노티할 수 있도록 [연출 장치]를 추가한다.</p>
+        
+        <ul>
+            <li>아이템을 사용했을 때 [VFX / SFX]의 연출 장치를 적용한다.</li>
+            <li>이를 통해 사용자에게 아이템 사용 피드백을 전달한다.</li>
+            <li>전투 로그에도 어떤 아이템을 사용했고 어떤 효과를 적용 받았는지 확인할 수 있게 만든다.</li>
+        </ul>
+        
+        <h3>3.4. 해금 및 슬롯 추가</h3>
+        
+        <p>영웅의 레벨에 따라 [아이템 슬롯이 해금 / 추가]될 수 있게 구조화한다.</p>
+        
+        <ul>
+            <li>영웅 레벨이 증가할 때마다 아이템 슬롯이 추가될 수 있게 구조화한다.
+                <ul>
+                    <li>기사단 아이템 슬롯 최대 개수 = 영웅 레벨 별로 정의</li>
+                    <li>Leve_Hero 데이터를 통해 영웅 레벨별 슬롯 개수를 정의할 수 있게 만든다.</li>
+                </ul>
+            </li>
+        </ul>
+        
+        <h2>4. 전체 프로세스</h2>
+        <img src="Portfolio_Img\SqaudItem\SquadItem_Process.png" width="800", height="auto">
+        <p>기사단 아이템은 첨부된 그림과 같은 프로세스를 통해 아이템을 [배정 / 사용 / 소모]하며, 각 구성 별 상세 내용은 다음과 같다.</p>
+        
+        <h3>4.1. 아이템 슬롯 및 배정</h3>
+        <img src="Portfolio_Img\SqaudItem\SquadItem_Slot_UI_Exam.png" width="800", height="auto">
+        
+        <p>첨부된 그림과 같이 [부대 편성 UI]에서 사용자 임의로 필드에서 적용 받길 원하는 아이템을 슬롯에 배정, 기사단을 출진 시킨다.</p>
+        
+        <ul>
+            <li>출진하는 영웅의 레벨이 만족할 경우 아이템 슬롯이 해금 / 추가된다.
+                <ul>
+                    <li>영웅의 레벨에 따라 슬롯의 해금 개수가 달라진다.</li>
+                </ul>
+            </li>
+            <li>슬롯이 생겨난 이후부터 기사단 아이템을 배정할 수 있게 된다.</li>
+            <li>슬롯은 복수로 지닐 수 있으며, 슬롯 당 1개의 아이템만 배정이 가능하다.
+                <ul>
+                    <li>1개의 아이템만 배정하기에 기사단 출진 이후 배정한 아이템은 1번만 사용이 가능하다.</li>
+                </ul>
+            </li>
+            <li>한 기사단에 동일한 아이템 타입의 아이템을 중복 세팅할 수 없다.
+                <ul>
+                    <li>ex - [슬롯 1 : 부상자 20% 회복 아이템 / 슬롯 2 : 부상자 50% 회복 아이템]</li>
+                    <li>예시와 같이 동일 타입의 아이템 동시에 배정이 불가하다.</li>
+                </ul>
+            </li>
+            <li>사용자의 <strong>인벤토리</strong>에 존재하는 아이템만 배정이 가능하다.
+                <ul>
+                    <li>슬롯에 아이템을 배정, 출진 할 경우 배정된 아이템 대상은 인벤토리에서 차감해 표시한다.</li>
+                </ul>
+            </li>
+        </ul>
+        
+        <div class="info-box">
+            <p>사용자 인벤토리에 [아이템 1]이 10개가 있고 기사단 A에 이를 배정하는 것을 가정하에 예시를 설명한다.</p>
+            <ul>
+                <li>[기사단 A]의 슬롯에 [아이템 1]을 배정해 출진할 경우 인벤토리 상에서 한 개가 차감된 9개가 표현된다.</li>
+                <li>기사단 A가 아이템을 사용하지 않고 <strong>[사망 / 귀환]</strong>할 경우 10개로 복구된다.</li>
+            </ul>
+        </div>
+        
+        <h3>4.2. 조건 및 사용</h3>
+        
+        <img src="Portfolio_Img\SqaudItem\Condition_and_Use.png" width="800", height="auto">
+        
+        <p>필드에 출진한 기사단이 <strong>"특정 조건"</strong>을 만족할 경우 이를 트리거로 슬롯에 배정한 아이템을 사용할 수 있다.</p>
+        
+        <ul>
+            <li>전투 / 채집 / 부상의 정도 / 건설 등.. 기사단의 [현재 상태 혹은 명령을 기준]으로 조건이 적용된다.</li>
+            <li>조건에 만족할 경우 슬롯에 배정된 아이템은 즉시 사용된다.</li>
+            <li>사용할 경우 기사단을 기준으로 SFX / VFX가 출력되어 사용자에게 아이템이 사용되었단 것을 노티한다.</li>
+        </ul>
+        
+        <h3>4.3. 소모 및 효과</h3>
+        
+        <p>기사단이 조건을 만족해 아이템을 사용할 경우 즉시 아이템이 소모되며, 효과가 적용된다.</p>
+        
+        <ul>
+            <li>사용과 동시에 기사단 아이템 슬롯에서 아이템 1개가 소모된다.</li>
+            <li>슬롯에 배정된 모든 아이템은 1회성 소모 아이템이다.
+                <ul>
+                    <li>출진 후 배정된 아이템을 사용했을 경우 더 이상 사용이 불가하다.</li>
+                </ul>
+            </li>
+            <li>소모 이후 아이템 별로 정의된 효과가 적용되며, 관련 연출이 기사단에게 적용된다.</li>
+            <li>모든 아이템 효과는 지속 시간이 있으며, 지속 시간 만료 시 효과가 종료된다.
+                <ul>
+                    <li>부대가 유저 성으로 복귀 시에도 아이템 효과가 종료된다.</li>
+                </ul>
+            </li>
+            <li>아이템이 소모되지 않은 상태에서 기사단이 [사망 혹은 복귀]를 할 경우 아이템 그대로 유지된다.</li>
+        </ul>
+        
+        <h2>5. 슬롯</h2>
+        
+        <p>슬롯은 부대 편성 UI에서 기사단에게 아이템을 배정하고 확인하는 역할의 신규 UI이자 <strong>"기사단의 인벤토리"</strong>이다.</p>
+        
+        <h3>5.1. 슬롯 UI</h3>     
+        <img src="Portfolio_Img\SqaudItem\SquadItem_Slot_UI_Exam.png" width="800", height="auto">
+        <p>첨부된 예시 그림과 같이 [부대 편성 UI]에 <strong>"슬롯 UI"</strong>를 추가한다.</p>
+        
+        <ul>
+            <li>영웅 레벨의 성장을 통해 슬롯이 최초 해금되는 순간부터 부대 편성 UI에서 슬롯 확인이 가능하다.
+                <ul>
+                    <li>영웅 레벨에 따라 슬롯 개수가 결정되며, 이는 데이터를 통해 정의된다.</li>
+                </ul>
+            </li>
+			<div class="warning-box"><strong>⚠️</strong> 만약, 출진할려는 영웅의 슬롯이 1개도 해금되지 않은 상태라면 숨김 처리한다.</div>
+            <li>슬롯은 항상 부대 배정 UI에 표현되며, 아직 해금되지 않은 슬롯은 <strong>"자물쇠로 잠긴 상태"</strong>로 표현된다.
+                <ul>
+                    <li>슬롯 해금의 순서는 좌측 순으로 진행된다.</li>
+                </ul>
+            </li>
+        </ul>
+        
+        <ul>
+            <li>예시 : 영웅 레벨이 올라 슬롯 1개가 해금되면 맨 좌측 해금되지 않은 슬롯의 자물쇠가 해제된다.</li>
+            <li>영웅을 변경 시 슬롯의 상태도 함께 갱신된다.
+                <div class="warning-box">
+                    <strong>⚠️</strong> 슬롯 해금의 개수가 영웅의 레벨별로 다르므로 갱신이 필요하다.
+                </div>
+            </li>
+            <li>특정 유닛으로 구성된 기사단은 기사단 아이템을 사용할 수 없다.
+                <ul>
+                    <li>이를 안내하기 위한 장치로써 슬롯을 <strong>"숨김 처리"</strong>한다.</li>
+                    <li>예시 : 드래곤 / 공성 / 마법 병기로 구성된 기사단</li>
+                </ul>
+            </li>
+            <li>위와 같은 내용을 적용하기 위해 다음과 같은 타입을 사용하는 유닛이 부대 배정될 경우 슬롯을 <strong>"숨김 처리"</strong>한다.
+                <ul>
+                    <li>UnitType - Artillery (공성 병기)</li>
+                    <li>UnitType - MagicWeapon (마법 병기)</li>
+                    <li>UnitType - Dragon (드래곤)</li>
+                </ul>
+            </li>
+            <li>슬롯을 선택 / 입력할 경우 기사단 아이템 배정 UI로 전환된다.</li>
+        </ul>
+        
+        <h3>5.2. 슬롯 세부 구성</h3>
+        <img src="Portfolio_Img\SqaudItem\Detail_SlotUI.png" width="800", height="auto">
+        <p>각 슬롯 별 상태에 따라 다음과 같은 정보가 출력된다.</p>
+        
+        <h4>아이템 아이콘</h4>
+        <ul>
+            <li>배정된 아이템이 지닌 IconPath 값을 참조해 관련 아이콘을 출력한다.</li>
+        </ul>
+        
+        <h4>아이템 등급</h4>
+        <ul>
+            <li>배정된 아이템이 지닌 ItemGrade 값을 참조해 정보를 출력한다.</li>
+        </ul>
+        
+        <h4>"+" 아이콘</h4>
+        <ul>
+            <li>슬롯에 아이템이 배정되지 않은 상태라면 출력되는 아이콘이다.</li>
+            <li>사용자에게 아이템이 배정되지 않아 비워진 상태라는 것을 인지시킨다.</li>
+        </ul>
+        
+        <h4>자물쇠 아이콘</h4>
+        <ul>
+            <li>영웅 레벨을 만족하지 않아 아직 해금되지 않은 슬롯의 경우 자물쇠 아이콘을 출력한다.</li>
+        </ul>
+        
+        <h4>슬롯 딤드 처리</h4>
+        <ul>
+            <li>사용자의 상태가 다음과 같은 경우에 슬롯을 딤드 처리해 아이템은 출진해 사용될 수 없다는 것을 안내한다.</li>
+            <li>사용자 인벤토리에 아이템이 존재하지 않은 상태에서 자동 배정이 될 경우.</li>
+        </ul>
+        
+        <h2>6. 배정</h2>
+        
+        <p>출진 시킬 때 기사단 아이템을 적용하는 행위를 배정이라 정의하며, 기본적인 룰은 다음과 같다.</p>
+        
+        <ul>
+            <li>배정은 <strong>"필드에서 어떤 아이템을 사용할 것인가?"</strong>를 정의하는 역할이다.</li>
+            <li>아이템 배정을 완료해야 기사단이 출진 후 아이템 사용이 가능하다.
+                <ul>
+                    <li>배정되지 않은 아이템은 사용이 불가능하다.</li>
+                </ul>
+            </li>
+            <li>배정 UI를 통해 사용자가 직접 <strong>"계정 인벤토리"</strong>에 있는 아이템을 기사단 아이템 슬롯에 배정할 수 있다.
+                <ul>
+                    <li>아이템 데이터 상 특정 타입으로 구분된 아이템만 배정이 가능하다.</li>
+                    <li>배정 후 기사단이 출진할 경우 인벤토리 상에서 해당 아이템의 스택 개수가 계정 인벤토리에서 1 차감된다.</li>
+                    <li>배정됐던 아이템을 기사단이 사용하지 않고 귀환했을 경우, 인벤토리에서 차감됐던 스택 개수가 복구된다.</li>
+                </ul>
+            </li>
+            <li>모든 아이템은 1개만 배정이 가능하며, 복수 배정이 불가능하다.
+                <ul>
+                    <li>출진 후 기사단 소모성 아이템을 한 개만 사용할 수 있게 하기 위함.</li>
+                </ul>
+            </li>
+            <li>슬롯이 여러 개인 상태라도 동일한 버프 타입의 기사단 소모성 아이템을 배정할 수 없다.</li>
+            <li>배정된 아이템 정보는 기사단이 출진한 뒤 서버 DB에 저장되며, 다음과 같이 활용된다.
+                <ul>
+                    <li>기사단에게 아이템 배정이 완료되면 영웅을 기준으로 관련 정보를 DB에 저장한다.</li>
+                    <li>ex - A 영웅이 출진할 때 아이템K를 배정했을 경우 A 영웅 DB에 관련 정보가 저장됨.</li>
+                    <li>출진한 기사단은 DB 정보를 기반으로 아이템을 사용.</li>
+                    <li>또한, 배정했던 아이템을 기반으로 영웅을 다시 출진 시킬 때 동일한 아이템으로 <strong>자동 배정</strong>된다.</li>
+                </ul>
+            </li>
+        </ul>
+        
+        <h3>6.1. 배정 UI</h3>
+        <img src="Portfolio_Img\SqaudItem\Equip_Slot.png" width="1000", height="auto">
+        <p>부대 배정 UI에서 아이템 슬롯을 선택 혹은 입력 시 전환 연출과 함께 <strong>"배정 UI"</strong>로 전환되며, 구성은 다음과 같다.</p>
+        
+        <h4>6.1.1. 아이템 그리드</h4>
+        
+        <img src="Portfolio_Img\SqaudItem\ItemGrid.png" width="600", height="auto">
+        <p>사용자 인벤토리 상에서 현재 지니고 있는 기사단 아이템만 분류해 그리드 형태로 표현해주는 역할의 UI다.</p>
+        
+        <h5>아이템 그리드 구성</h5>
+        <ul>
+            <li>사용자 인벤토리에서 기사단 소모성 아이템만 참조해 그리드가 구성된다.
+                <div class="lightbulb-box">
+                    <strong>💡</strong> ItemData의 Type 중 [SquadItem 타입]으로 구분된 아이템 표현.
+                </div>
+            </li>
+            <li>배정 UI 진입과 동시에 그리드에 대한 정보를 구성한다.
+                <div class="warning-box">
+                    <strong>⚠️</strong> 사용자가 배정 UI를 활성화하고 있는 동안 획득한 기사단 아이템은 그리드에 갱신하지 않는다.
+                </div>
+            </li>
+        </ul>
+        
+        <h5>그리드 셀렉트</h5>
+        <ul>
+            <li>모든 아이템 그리드는 선택이 가능하다.</li>
+            <li>선택 시 이를 알리기 위해 그리드 테두리에 선택 UI 연출이 적용된다.</li>
+            <li>최초 배정 UI 진입 시엔 어떠한 아이템도 선택되지 않은 상태로 진입한다.</li>
+        </ul>
+        
+        <h5>아이템 아이콘</h5>
+        <ul>
+            <li>기사단 소모성 아이템의 아이콘을 표시해주는 역할의 UI다.</li>
+            <li>ItemData.xlsx → Data sheet → IconPath column을 참조해 출력한다.</li>
+        </ul>
+        
+        <h5>아이템 등급 백판</h5>
+        <ul>
+            <li>기사단 소모성 아이템의 등급을 표시해주는 역할의 UI다.</li>
+            <li>ItemData.xlsx → Data sheet → ItemGrade column을 참조해 출력한다.</li>
+        </ul>
+        
+        <h5>아이템 수량</h5>
+        <ul>
+            <li>현재 사용자 인벤토리에 있는 각 아이템의 수량을 표현한다.</li>
+            <li>이미 기사단에게 배정되어 출진한 상태인 아이템의 경우 수량이 차감된 상태로 표현한다.</li>
+            <li>출진으로 인해 <strong>"아이템 수량이 0일 경우"</strong> 그리드 상에 출력하지 않는다.</li>
+        </ul>
+        
+        <h5>그외 기능</h5>
+        <ul>
+            <li>한 화면에 최대 3*2의 그리드가 표현된다.</li>
+            <li>상 / 하 스크롤 기능을 지원하며, 6개 이상의 아이템을 스크롤을 통해 확인할 수 있게 만든다.</li>
+        </ul>
+        
+        <h4>6.1.2. 슬롯 배정</h4>
+        <img src="Portfolio_Img\SqaudItem\Euip_SquadItem.png" width="600", height="auto">
+        <p>아이템 그리드 상에서 선택한 아이템을 슬롯에 배정하는 역할의 UI이다.</p>
+        
+        <h5>배정 버튼</h5>
+        <ul>
+            <li>그리드 상에서 아이템을 선택한 상태에서 빈 슬롯을 입력할 경우 배정된다.</li>
+            <li>이미 동일한 버프 타입의 기사단 소모성 아이템이 다른 슬롯에 배정된 상태라면 그리드 상 해당 아이템이 출력되지 않는다.
+                <ul>
+                    <li>예시 - 1번 슬롯에 공격력 버프 타입 아이템이 배정된 상태라면 2/3번 슬롯을 선택 시 1번 슬롯에 배정된 아이템이 출력되지 않음.</li>
+                </ul>
+            </li>
+        </ul>
+        
+        <h5>자물쇠 아이콘</h5>
+        <ul>
+            <li>영웅 레벨을 만족하지 않아 아직 해금되지 않은 슬롯을 안내하는 역할의 UI이다.</li>
+            <li>입력 시 어떠한 기능도 제공하지 않는다.</li>
+        </ul>
+        
+        <h5>아이템 스왑</h5>
+        <ul>
+            <li>이미 아이템이 배정된 슬롯을 선택 시 스왑이 가능하다.</li>
+            <li>배정된 슬롯을 입력 시 그리드 UI가 출력, 다른 아이템으로 변경이 가능하다.</li>
+        </ul>
+        
+        <h4>6.1.3. 툴팁</h4>     
+        <img src="Portfolio_Img\SqaudItem\ToolTip.png" width="400", height="auto">
+        <p>아이템 그리드 상에서 선택한 아이템의 세부 내용을 안내하는 역할의 UI이며, 구성은 인벤토리 UI 상에서 출력되는 내용과 동일하다.</p>
+        
+        <h5>아이템 이름</h5>
+        <ul>
+            <li>그리드 상 선택한 아이템의 이름을 표시해주는 역할의 UI다.</li>
+            <li>ItemData.xlsx → Data sheet → Name column을 참조해 출력.</li>
+        </ul>
+        
+        <h5>아이템 아이콘</h5>
+        <ul>
+            <li>그리드 상 선택한 아이템의 아이콘을 표시해주는 역할의 UI다.</li>
+            <li>ItemData.xlsx → Data sheet → IconPath column을 참조해 출력.</li>
+        </ul>
+        
+        <h5>아이템 등급 백판</h5>
+        <ul>
+            <li>그리드 상 선택한 아이템의 등급을 표시해주는 역할의 UI다.</li>
+            <li>ItemData.xlsx → Data sheet → ItemGrade column을 참조해 출력.</li>
+        </ul>
+        
+        <h5>아이템 설명</h5>
+        <ul>
+            <li>그리드 상 선택한 아이템의 설명을 표시한다.</li>
+            <li>ItemData.xlsx → Data sheet → Desc column을 참조해 출력.</li>
+            <li>다음과 같은 정보를 안내하는 역할로 활용한다.
+                <ul>
+                    <li>버프 효과 분류</li>
+                    <li>발동 조건</li>
+                    <li>효과 내용</li>
+                </ul>
+            </li>
+        </ul>
+        
+        <p>단, 인벤토리 UI상에서 지원해주는 사용 버튼 및 수량을 지정하는 기능은 지원하지 않는다.</p>
+        
+        <h4>6.1.4. 해제 / 확인 버튼</h4>     
+        <img src="Portfolio_Img\SqaudItem\Button.png" width="400", height="auto">
+        <p>슬롯에 배정된 아이템을 해제 혹은 확인하는 역할의 버튼 UI이다.</p>
+        
+        <h5>해제</h5>
+        <ul>
+            <li>이미 슬롯에 배정한 아이템을 빈 슬롯으로 적용하기 위한 역할의 UI이다.</li>
+        </ul>
+        
+        <h5>확인</h5>
+        <ul>
+            <li>그리드에서 선택한 아이템을 슬롯에 배정하는 역할의 UI이다.</li>
+            <li>버튼 입력 시 그리드상 선택한 아이템이 출진창에서 배정된다.</li>
+        </ul>
+        
+        <h3>6.2. 자동 배정 기능</h3>
+        <img src="Portfolio_Img\SqaudItem\AutoEquip.png" width="1000", height="auto">
+        <p>기사단의 구성 요소 중 하나인 <strong>영웅</strong>을 기준으로 부대 편성 UI에서 <strong>"마지막으로 배정한"</strong> 아이템을 자동 배정할 수 있게 편의 기능을 제공한다.</p>
+        
+        <ul>
+            <li>기사단 아이템을 배정한 순간부터 DB에 저장한다.</li>
+            <li>부대 편성 UI에 진입하거나 영웅을 변경할 때마다 검사, 적용한다.
+                <ul>
+                    <li>배정한 기록이 없다면 빈 슬롯을 출력한다.</li>
+                </ul>
+            </li>
+            <li>배정한 기록이 있다면 사용자가 마지막에 구성한 아이템을 토대로 슬롯을 구성한다.
+                <div class="warning-box">
+                    <strong>⚠️</strong> 단, 사용자 인벤토리에 배정했던 아이템이 없을 경우 아이템은 보여주되, 슬롯은 딤드 처리한다.
+                </div>
+            </li>
+            <li>자동 배정이 될 때 대상 아이템이 사용자 인벤토리에 1개 이상 있을 경우에만 적용된다.</li>
+            <li>사용자 인벤에 해당 아이템이 없을 경우 슬롯을 <strong>"딤드 처리"</strong>해 출력한다.
+                <ul>
+                    <li>이를 통해 사용자가 해당 기사단 아이템을 가지지 않고 출진한다는 것을 안내한다.</li>
+                    <li>슬롯이 <strong>"딤드 처리"</strong>된 아이템은 배정 UI를 통해 사용자 임의로 다른 아이템으로 배정이 가능하다.</li>
+                </ul>
+            </li>
+            <li>추후 마일스톤에서 게임 옵션 관련 기능을 추가할 때 <strong>"기사단 아이템 자동 배정 기능"</strong>을 On/Off 할 수 있게 옵션을 제공한다.
+                <div class="lightbulb-box">
+                    <strong>💡</strong> 강제성이 존재하는 기능은 누군가에게 불편함을 끼칠 수 있다. 이를 고려해 게임 옵션에서 On/Off 기능을 제공한다.
+                </div>
+            </li>
+        </ul>
+        
+        <h2>7. 조건</h2>
+        
+        <img src="Portfolio_Img\SqaudItem\Condition.png" width="1000", height="auto">
+        <p>기사단 아이템은 사용될 수 있는 발동 조건이 존재하며, 이를 조건이라 정의한다.</p>
+        
+        <ul>
+            <li>사용자가 기사단에게 아이템을 슬롯에 <strong>배정한 경우</strong>에만 조건을 체크한다.
+                <ul>
+                    <li>배정된 아이템이 없거나 이미 사용했을 경우 조건 검사를 하지 않는다.</li>
+                </ul>
+            </li>
+            <li>기사단이 <strong>"특정 행동(명령) 혹은 상태"</strong>가 될 경우, 이를 트리거로 조건 검사가 이루어진다.</li>
+            <li>모든 기사단 아이템은 <strong>"트리거 및 조건"</strong>을 지니고 있으며, 이를 데이터로 구조화 한다.</li>
+            <li>특정 아이템의 경우 트리거만 존재하는 경우도 허용한다.
+                <ul>
+                    <li>예시 - 기사단이 공격할 경우 공격력 증가 버프 아이템 사용.</li>
+                </ul>
+            </li>
+            <li>다양한 <strong>"트리거와 조건"</strong>을 데이터로 조합 / 정의할 수 있게 만들어 기사단 아이템 컨텐츠를 다채롭게 디자인할 수 있게 만든다.</li>
+        </ul>
+        
+        <h3>7.1. 트리거</h3>
+        <p>기사단이 특정 행동 / 상태가 됐을 때에 트리거가 된다.</p>
+        
+        <ul>
+            <li>모든 기사단 아이템은 트리거를 지닌다.
+				<ul>
+                    <li>기사단 아이템이 참조하는 <strong>"SkillEffect Table"</strong>에 정의된 <strong>"ActivateType"</strong>을 통해 정의된다.</li>
+					<li>SkillEffect.xlsx → Data Sheet → Activate Column을 참조한다.</li>
+				</ul>
+            </li>
+            <li>기사단에게 배정된 아이템이 트리거가 될 경우, 기사단 아이템의 조건을 검사한다.
+                <ul>
+                    <li>아이템 디자인에 따라서 트리거만 존재하는 기사단 아이템도 존재한다.</li>
+                </ul>
+            </li>
+            <li>기사단 아이템의 트리거는 <strong>"일반 기사단(Normal_Squad)"</strong>인 상태에서만 적용된다.
+                <ul>
+                    <li><strong>"주둔 / 수성 / 공격대 상태"</strong>에선 기사단 아이템의 트리거가 동작되지 않게 만들어 아이템을 사용하지 못하게 만든다.</li>
+                </ul>
+            </li>
+        </ul>
+        
+        <h3>7.2. 조건 검사</h3>     
+        <img src="Portfolio_Img\SqaudItem\Trigger.png" width="1000", height="auto">
+        <p>트리거 이후엔 <strong>"조건 검사"</strong>를 하게 된다.</p>
+        
+        <ul>
+            <li>이는 기사단 아이템 별로 참조하는 <strong>"SkillEffect Table"</strong>에 정의된 <strong>"Condition"</strong>을 통해 정의된다.</li>
+                    <ul>
+						
+                        <li>SkillEffect.xlsx → Data Sheet → Condition Column</li>
+                    </ul>
+            <li>정의된 조건에 만족할 경우 사용에 성공한다.
+                <ul>
+                    <li>조건에 불만족 할 경우 사용에 실패한다.</li>
+                </ul>
+            </li>
+            <li>아이템을 통한 조건 검사도 트리거와 마찬가지로 <strong>"일반 기사단(Normal_Squad)"</strong>인 상태에서만 적용된다.</li>
+        </ul>
+        
+        <h3>7.3. SkillEffect 데이터 참조</h3>
+        
+        <ul>
+            <li>기사단 아이템에서 SkillEffect의 데이터를 참조해 <strong>"트리거 & 조건"</strong>을 정의할 수 있게 구조화한다.</li>
+            <li>ItemData.xlsx → Data Sheet → SquadItemSkillEffect Column을 추가한다.
+                <ul>
+                    <li>SkillEfffect의 DataName을 작성할 수 있으며, 해당 값을 통해 기사단 아이템의 트리거 및 조건을 적용할 수 있게 만든다.</li>
+                    <li><strong>⚠️</strong> SkillEffect 테이블에 정의되지 않은 값은 작성할 수 없으며, 정의되지 않은 값 작성 시 기사단 아이템은 동작하지 않는다.</li>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+        
+        <h2>8. 사용</h2>
+        <img src="Portfolio_Img\SqaudItem\SquadItem_Use.png" width="1000", height="auto">
+        <p>기사단이 조건에 만족했을 때 아이템의 효과를 적용, 기사단 인벤에 배정한 아이템이 소모하며, 이를 사용이라 정의한다.</p>
+        
+        <h3>8.1. 아이템 사용과 소모</h3>
+        
+        <p>기사단이 트리거 / 조건을 모두 만족할 경우 기사단의 [*슬롯 인벤]에 배정된 아이템을 사용하며, 소모된다.</p>
+        
+        <ul>
+            <li>배정했던 아이템을 사용 / 소모할 경우 더 이상 사용할 수 없다.
+                <div class="warning-box">
+                    <strong>⚠️</strong> 모든 기사단 소모성 아이템은 <strong>"1회성"</strong>이며, 1개를 초과해 아이템 배정이 불가능하다.
+                </div>
+            </li>
+            <li>아이템 사용됨과 동시에 기사단에게 배정했던 아이템은 즉시 소모된다.</li>
+            <li>배정된 아이템을 사용 / 소모하지 않고 기사단이 귀환(사망)할 경우 다음과 같이 처리한다.
+                <ul>
+                    <li>기사단 아이템 슬롯에 배정 및 출진해 <strong>"사용자 인벤토리에서 스택이 차감됐던 아이템"</strong>이 복구된다.</li>
+                    <li>A 아이템을 배정한 상태로 출진했다가 다시 귀환할 경우 A 아이템이 계정 인벤토리에 +1되어 복구된다.</li>
+                </ul>
+            </li>
+        </ul>
+        
+        <h3>8.2. 효과 적용</h3>
+        <img src="Portfolio_Img\SqaudItem\SquadItem_Effect.png" width="800", height="auto">     
+        <p>아이템 소모가 일어난 뒤 기사단에게 효과가 적용되며, 즉시 / 지속효과로 구분된다.</p>
+        
+        <h4>8.2.1. 즉시 효과</h4>
+        
+        <ul>
+            <li>아이템 사용과 동시에 즉시 효과가 적용되는 형태이다.
+                <ul>
+                    <li>예시 1 - 부상 병력 50% 회복.</li>
+                    <li>예시 2 - SkillPoint 100 충전.</li>
+                </ul>
+            </li>
+            <li>즉시 효과는 Skill_Effect Table의 <strong>"Effect1 ~ Effect2 컬럼"</strong>을 통해 정의한다.
+                <ul>
+                    <li>아이템에 연결된 Skill_Effect의 <strong>"Effect1 ~ Effect2 컬럼"</strong>을 참조, 즉시 효과가 적용되게 만든다.</li>
+                    <li>Effect 컬럼의 값이 EA_Buff일 경우.</li>
+                    <li>또한, EA_Buff와 연계되는 컬럼인 Subject 값도 적용 받을 수 있게 만들어 지속 효과를 정의할 수 있게 만든다.</li>
+                </ul>
+            </li>
+        </ul>
+        
+        <h4>8.2.2. 지속 효과</h4>
+        
+        <ul>
+            <li>아이템 사용 후 효과가 정해진 시간 동안 유지되는 형태의 효과다.
+                <ul>
+                    <li>예시 1- 1분간 공격력 20% 증가.</li>
+                    <li>예시 2- 1분간 방어력 30% 증가.</li>
+                </ul>
+            </li>
+            <li>지속 효과는 즉시 효과와 동일하게 <strong>"Effect1 ~ Effect2 컬럼"</strong>을 통해 정의한다.
+                <ul>
+                    <li>아이템에 연결된 Skill_Effect Table의 <strong>"Effect1 ~ Effect2 컬럼"</strong>을 참조, 지속 효과가 적용되게 만든다.</li>
+                    <li>Effect 컬럼의 값이 EA_Buff일 경우.</li>
+                    <li>또한, EA_Buff와 연계되는 컬럼인 Subject 값도 적용 받을 수 있게 만들어 지속 효과를 정의할 수 있게 만든다.</li>
+                </ul>
+            </li>
+            <li>지속 효과의 경우 적용된 기사단이 <strong>"사망 혹은 귀환할 경우 적용된 효과"</strong>가 제거된다.
+                <div class="warning-box">
+                    <strong>⚠️</strong> 주둔의 경우 전투를 할 수 있는 연장선으로 판단하며, 효과가 유지된다.
+                </div>
+            </li>
+        </ul>
+        
+        <h3>8.3. 사용 연출</h3>
+        
+        <p>효과가 적용됨과 동시에 사용 연출이 기사단에게 적용된다.</p>
+        
+        <ul>
+            <li>기사단 아이템에서 지원하는 연출은 VFX / SFX / 플로팅이다.
+                <ul>
+                    <li>별도의 애니메이션 연출은 지원하지 않는다.</li>
+                    <li>아이템 별로 애니메이션까지 제공하기 위해선 너무 많은 비용이 발생될 것으로 예상된다.</li>
+                </ul>
+            </li>
+        </ul>
+        
+        <h4>8.3.1. 즉시 효과 연출</h4>
+        
+        <ul>
+            <li>아이템이 참조하는 Skill_Effect 데이터 상에 SkillFXRes 컬럼을 참조, 즉시 효과 연출(VFX / SFX)을 출력한다.
+                <ul>
+                    <li>SkillFXRes 컬럼은 영웅이 스킬을 사용할 때 어떤 연출 데이터를 참조해 적용할지 결정하는 역할의 데이터이다.</li>
+                    <li><strong>💡</strong> 기사단 아이템도 동일하게 해당 데이터를 참조해 즉시 효과 연출을 적용한다.</li>
+                </ul>
+            </li>
+        </ul>
+        
+        <h4>8.3.2. 지속 효과 연출</h4>
+        
+        <ul>
+            <li>지속 효과의 경우 Skill_Effect가 참조하고 있는 Skill_Buff 데이터의 FXRes 값을 참조, 지속 효과 연출(VFX / SFX)을 출력한다.
+                <div class="lightbulb-box">
+                    <strong>💡</strong> 지속 효과가 종료될 때까지 연출은 유지된다.
+                </div>
+            </li>
+            <li>기사단 아이템 디자인에 따라 즉시 효과 연출과 함께 적용되는 케이스도 존재할 수 있다.</li>
+        </ul>
+        
+        <h4>8.3.3. 플로팅 연출</h4>
+        
+        <ul>
+            <li>아이템을 사용해 효과를 적용 받을 경우 <strong>"아이템 효과"</strong>가 플로팅되어 안내될 수 있게 만든다.
+                <ul>
+                    <li>예시 : 공격력 증가 아이템을 사용했을 경우 기사단 인근에 <strong>"▲ 공격력 증가!"</strong> 텍스트가 플로팅됨.</li>
+                </ul>
+            </li>
+            <li>플로팅 연출의 경우 1회성이며, 지속되지 않는다.</li>
+            <li>기존 시스템 플로팅 기능을 정의한 [Floating_Info] / [FloatingResInfoData]를 활용해 적용한다.</li>
+            <li>각 아이템 효과(SkillEffect 데이터)별로 플로팅을 직접 데이터로 적용할 수 있게 구조화한다.
+                <ul>
+                    <li>기사단 아이템 디자인에 따라 플로팅에 표현할 정보가 상이할 수 있다.</li>
+                    <li><strong>⚠️</strong> 위와 같은 이유로 플로팅 연출을 아이템 디자인에 맞게 적용하기 위해선 직접 구분 / 적용할 수 있게 만든다.</li>
+                </ul>
+            </li>
+        </ul>
+        
+        <h2>9. ItemData 테이블 데이터 추가</h2>
+        
+        <h3>9.1. SquadItem Enum 추가</h3>
+        
+        <p>ItemData.xlsx → Data Sheet → Type 컬럼에서 사용 중인 EnumItemType에 신규 Enum인 <strong>SquadItem</strong>을 추가한다.</p>
+        
+        <ul>
+            <li>기사단 소모성 아이템을 구분하기 위한 역할의 타입이다.</li>
+            <li>해당 타입의 아이템만 [배정 UI]에서 출력 / 배정할 수 있다.</li>
+            <li>SquadItem Type을 사용하는 아이템들은 인벤토리 UI 상에서 <strong>"버프 탭"</strong>에 표현된다.
+                <div class="warning-box">
+                    <strong>⚠️</strong> 해당 타입의 아이템을 추가할 땐 ItemData의 ItemUIGroup을 Buff로 지정한다.
+                </div>
+            </li>
+            <li>사용자 인벤토리 상에선 기사단 아이템은 표현만 되며, 사용은 불가하다.
+                <div class="warning-box">
+                    <strong>⚠️</strong> 출진 UI를 통해서만 배정이 가능하다.
+                </div>
+            </li>
+        </ul>
+        
+        <h3>9.2. ItemBuffType Column 추가</h3>
+        
+        <p>신규 컬럼인 <strong>"ItemBuffType 컬럼"</strong>을 추가한다.</p>
+        
+        <ul>
+            <li>해당 컬럼엔 신규 EnumType인 <strong>EnumItemBuffType</strong>을 추가해 데이터를 작성 할 수 있게 하며, M4 구성은 다음과 같다.
+                <ul>
+                    <li>Undefined - 미정의</li>
+                    <li>Heal - 회복 아이템</li>
+                    <li>Attack - 공격력 증가 아이템</li>
+                    <li>Defence - 방어력 증가 아이템</li>
+                    <li>AttackSpeed - 공격속도 증가 아이템</li>
+                </ul>
+            </li>
+            <li>해당 타입 데이터를 통해 기사단 아이템 배정 시 [동일 타입 아이템 배정이 불가]하게 처리한다.</li>
+            <li>추후 마일스톤에 새로운 버프 타입의 아이템이 등장할 경우 해당 enum을 추가해 관련 내용을 구분할 수 있게 한다.</li>
+        </ul>
+        
+        <h3>9.3. SquadItemSkillEffect Column 추가</h3>
+        
+        <p>신규 컬럼인 <strong>"SquadItemSkillEffect 컬럼"</strong>을 추가한다.</p>
+        
+        <ul>
+            <li>기사단이 아이템을 사용했을 때 어떤 스킬 데이터를 참조해 출력할지 결정하는 역할의 데이터이다.</li>
+            <li>SkillEffect 테이블에 정의된 DataName을 작성한다.
+                <div class="warning-box">
+                    <strong>⚠️</strong> SkillEffect 테이블에 정의되지 않은 값을 작성 시 기사단 아이템이 사용되지 않는다.
+                </div>
+            </li>
+        </ul>
+        
+        <h2>10. Level_Hero 테이블 데이터 추가</h2>
+        
+        <h3>10.1. ItemSlot Column 추가</h3>
+        
+        <p>Level_Hero.xlsx → Data Sheet에 <strong>ItemSlot</strong> 컬럼을 추가한다.</p>
+        
+        <ul>
+            <li>영웅이 특정 레벨 대에 슬롯을 몇 개 소유할지 결정하는 역할의 컬럼이다.</li>
+            <li>데이터 형식은 int이다.</li>
+            <li>값이 없거나 0일 경우 슬롯이 할당되지 않는 영웅 레벨대로 판단한다.</li>
+            <li>만약, Level이 10인 Hero 데이터에 ItemSlot 컬럼 값을 3으로 입력했을 때를 가정하면 다음과 같이 동작한다.
+                <ul>
+                    <li>예시 - 영웅이 레벨 10을 달성할 경우 슬롯 3개가 적용된다.</li>
+                </ul>
+            </li>
+        </ul>
+        
+        <h2>11. Skill_Effect 테이블 데이터 추가</h2>
+        <img src="Portfolio_Img\SqaudItem\FloatingResInfoData.png" width="1000", height="auto">     
+        <p>기사단 아이템을 사용했을 때 기사단에게 어떤 플로팅을 적용할지 결정하는 역할의 신규 컬럼이다.</p>
+        
+        <ul>
+            <li>첨부된 그림과 같이 에디터 테이블인 FloatingResInfoData에 정의된 <strong>"행 이름"</strong>을 작성한다.
+                <ul>
+                    <li>값이 없을 경우 플로팅을 띄우지 않는 Skill_Effect 데이터로 판단한다.</li>
+                </ul>
+            </li>
+            <li>값이 작성됐을 경우 Skill_Effect가 적용됐을 때 작성된 <strong>"행 이름"</strong>의 FloatingResInfoData를 참조해 플로팅을 출력한다.</li>
+            <li>플로팅이 출력되는 타겟은 스킬에 적중된 대상으로 한다.
+                <ul>
+                    <li>ex 1 - 다른 대상에게 스킬을 사용했다면 플로터가 다른 대상에게 출력.</li>
+                    <li>ex 2 - 내 기사단을 대상으로 스킬을 사용했다면 플로터가 내 기사단에게 출력.</li>
+                </ul>
+            </li>
+        </ul>
+        
+        <h2>12. 기사단 아이템 컨텐츠</h2>
+        
+        <p>해당 기능을 개발해 다음과 같은 기사단 아이템을 만드는 것을 목표로 한다.</p>
+        
+        <ul>
+            <li>이후 마일스톤에선 해당 컨테츠를 확장해 다음과 같은 아이템을 만드는 것을 고려해보자.
+                <ul>
+                    <li>채집 시 채집속도 N% 증가.</li>
+                    <li>대상에게 스킬 사용 시 N% 추가 피해.</li>
+                    <li>출진 시 몬스터 피해량이 N% 증가.</li>
+                    <li>출진 시 영웅의 경험치 획득량 N% 증가.</li>
+                </ul>
+            </li>
+        </ul>
+        
+        <h3>12.1. 즉시 회복 포션</h3>
+        
+        <table class="content-table">
+            <tr>
+                <th>분류</th>
+                <th>설명</th>
+            </tr>
+            <tr>
+                <td>이름</td>
+                <td>즉시 회복 포션</td>
+            </tr>
+            <tr>
+                <td>아이템 등급</td>
+                <td>우수</td>
+            </tr>
+            <tr>
+                <td>설명</td>
+                <td>사용 조건 : 기사단의 남은 병력이 50% 미만일 경우 사용합니다.<br>효과 : 부상 병력을 1,000명 치료합니다.</td>
+            </tr>
+            <tr>
+                <td>지속 시간</td>
+                <td>없음</td>
+            </tr>
+            <tr>
+                <td>사용 조건</td>
+                <td>기사단의 병력이 50% 미만일 경우</td>
+            </tr>
+            <tr>
+                <td>효과</td>
+                <td><strong>부상 병력을 1,000명 치료.</strong></td>
+            </tr>
+            <tr>
+                <td>Skill Res FileName</td>
+                <td>SquadItem_Recovery_A_01</td>
+            </tr>
+            <tr>
+                <td>FX 효과 키워드</td>
+                <td>#녹색 #일회성 연출 #기사단 전체를 감싸 #1초 내외 연출</td>
+            </tr>
+            <tr>
+                <td>ItemID</td>
+                <td>SquadItem.100</td>
+            </tr>
+        </table>
+        
+        <h3>12.2. 공격력 증가 포션</h3>
+        
+        <table class="content-table">
+            <tr>
+                <th>분류</th>
+                <th>설명</th>
+            </tr>
+            <tr>
+                <td>이름</td>
+                <td>공격력 증가 포션</td>
+            </tr>
+            <tr>
+                <td>아이템 등급</td>
+                <td>우수</td>
+            </tr>
+            <tr>
+                <td>설명</td>
+                <td>사용 조건 : 전투 시작 시 아이템을 사용합니다.<br>효과 : 10분 간 기사단의 공격력이 5% 증가합니다.</td>
+            </tr>
+            <tr>
+                <td>지속 시간</td>
+                <td>10분<br><br>
+                <strong>⚠</strong> 출진 후 한번만 사용이 가능한 특성을 지닌 "기사단 아이템"을 고려한 지속 시간.<br>
+                <strong>⚠</strong> 1회 전투 사이클에만 동작되는 것이 아닌 여러 횟수의 전투 사이클에 효과가 지속되길 희망.</td>
+            </tr>
+            <tr>
+                <td>사용 조건</td>
+                <td>전투 시작 시 (몬스터 포함)<br>전투 시작 = 대상에게 피해를 입힌 순간.</td>
+            </tr>
+            <tr>
+                <td>효과</td>
+                <td><strong>10분간 기사단 공격력 5% 증가</strong></td>
+            </tr>
+            <tr>
+                <td>Skill Res FileName</td>
+                <td>SquadItem_Attack_A_01</td>
+            </tr>
+            <tr>
+                <td>FX 효과 키워드</td>
+                <td>#붉은색 #일회성 연출 #기사단 전체를 감싸 #1초 내외 연출</td>
+            </tr>
+            <tr>
+                <td>ItemID</td>
+                <td>SquadItem.200</td>
+            </tr>
+        </table>
+        
+        <h3>12.3. 방어력 증가 포션</h3>
+        
+        <table class="content-table">
+            <tr>
+                <th>분류</th>
+                <th>설명</th>
+            </tr>
+            <tr>
+                <td>이름</td>
+                <td>방어력 증가 포션</td>
+            </tr>
+            <tr>
+                <td>아이템 등급</td>
+                <td>우수</td>
+            </tr>
+            <tr>
+                <td>설명</td>
+                <td>사용 조건 : 전투 시작 시 아이템을 사용합니다.<br>효과 : 10분 간 기사단의 방어력이 5% 증가합니다.</td>
+            </tr>
+            <tr>
+                <td>지속 시간</td>
+                <td>10분<br><br>
+                <strong>⚠</strong> 출진 후 한번만 사용이 가능한 특성을 지닌 "기사단 아이템"을 고려한 지속 시간.<br>
+                <strong>⚠</strong> 1회 전투 사이클에만 동작되는 것이 아닌 여러 횟수의 전투 사이클에 효과가 지속되길 희망.</td>
+            </tr>
+            <tr>
+                <td>사용 조건</td>
+                <td>전투 시작 시 (몬스터 포함)<br>전투 시작 = 대상에게 피해를 입힌 순간.</td>
+            </tr>
+            <tr>
+                <td>효과</td>
+                <td><strong>10분간 기사단 방어력 5% 증가</strong></td>
+            </tr>
+            <tr>
+                <td>Skill Res FileName</td>
+                <td>SquadItem_Attack_A_01</td>
+            </tr>
+            <tr>
+                <td>FX 효과 키워드</td>
+                <td>#파랑색 #일회성 연출 #기사단 전체를 감싸 #1초 내외 연출</td>
+            </tr>
+            <tr>
+                <td>ItemID</td>
+                <td>SquadItem.300</td>
+            </tr>
+        </table>
+        
+        <h3>12.4. 공격속도 증가 포션</h3>
+        
+        <table class="content-table">
+            <tr>
+                <th>분류</th>
+                <th>설명</th>
+            </tr>
+            <tr>
+                <td>이름</td>
+                <td>공격속도 증가 포션</td>
+            </tr>
+            <tr>
+                <td>아이템 등급</td>
+                <td>우수</td>
+            </tr>
+            <tr>
+                <td>설명</td>
+                <td>사용 조건 : 전투 시작 시 아이템을 사용합니다.<br>효과 : 10분 간 기사단의 공격 속도를 5% 증가합니다.</td>
+            </tr>
+            <tr>
+                <td>지속 시간</td>
+                <td>10분<br><br>
+                <strong>⚠</strong> 출진 후 한번만 사용이 가능한 특성을 지닌 "기사단 아이템"을 고려한 지속 시간.<br>
+                <strong>⚠</strong> 1회 전투 사이클에만 동작되는 것이 아닌 여러 횟수의 전투 사이클에 효과가 지속되길 희망.</td>
+            </tr>
+            <tr>
+                <td>사용 조건</td>
+                <td>전투 시작 시 (몬스터 포함)<br>전투 시작 = 대상에게 피해를 입힌 순간.</td>
+            </tr>
+            <tr>
+                <td>효과</td>
+                <td><strong>10분간 기사단 공격속도 10% 증가</strong></td>
+            </tr>
+            <tr>
+                <td>Skill Res FileName</td>
+                <td>SquadItem_AttackSpd_A_01</td>
+            </tr>
+            <tr>
+                <td>FX 효과 키워드</td>
+                <td>#주황색 #일회성 연출 #기사단 전체를 감싸 #1초 내외 연출</td>
+            </tr>
+            <tr>
+                <td>ItemID</td>
+                <td>SquadItem.300</td>
+            </tr>
+        </table>
+        
+    </div>
+</body>
+</html>

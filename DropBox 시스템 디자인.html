@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DropBox 시스템 기획서</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
+            line-height: 1.8;
+            color: #333;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .header-image {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 40px;
+            background: linear-gradient(135deg, #f39c12 0%, #f1c40f 100%);
+            border-radius: 10px;
+        }
+        
+        .header-image h1 {
+            color: white;
+            font-size: 2.5em;
+            margin: 20px 0;
+        }
+        
+        .box-icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+        }
+        
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 15px;
+        }
+        
+        h2 {
+            font-size: 1.8em;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            color: #2c3e50;
+            background: #ecf0f1;
+            padding: 15px;
+            border-radius: 5px;
+        }
+        
+        h3 {
+            font-size: 1.4em;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            color: #34495e;
+            border-left: 4px solid #3498db;
+            padding-left: 15px;
+        }
+        
+        h4 {
+            font-size: 1.2em;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            color: #555;
+        }
+        
+        h5 {
+            font-size: 1.1em;
+            margin-top: 15px;
+            margin-bottom: 10px;
+            color: #666;
+        }
+        
+        .info-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+        }
+        
+        .info-table th {
+            background: #f39c12;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: bold;
+        }
+        
+        .info-table td {
+            padding: 12px;
+            border: 1px solid #ddd;
+        }
+        
+        .info-table tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+        
+        .info-box {
+            background: #e8f4f8;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        
+        .warning-box {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        
+        .success-box {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        
+        .danger-box {
+            background: #f8d7da;
+            border-left: 4px solid #dc3545;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        
+        ul, ol {
+            margin: 15px 0 15px 30px;
+        }
+        
+        li {
+            margin: 8px 0;
+        }
+        
+        .image-placeholder {
+            background: #fff9e6;
+            border: 2px dashed #f39c12;
+            padding: 60px 40px;
+            text-align: center;
+            margin: 20px 0;
+            color: #6c757d;
+            border-radius: 5px;
+            font-size: 1.1em;
+        }
+        
+        .diagram {
+            background: #f8f9fa;
+            border: 2px solid #dee2e6;
+            padding: 40px;
+            margin: 20px 0;
+            text-align: center;
+            border-radius: 5px;
+        }
+        
+        .highlight {
+            background: #fff3cd;
+            padding: 2px 5px;
+            font-weight: bold;
+        }
+        
+        .code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            color: #e83e8c;
+        }
+        
+        .content-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        .content-table th,
+        .content-table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        
+        .content-table th {
+            background: #6c757d;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .content-table tr:hover {
+            background: #f5f5f5;
+        }
+        
+        .process-flow {
+            background: white;
+            border: 2px solid #f39c12;
+            padding: 30px;
+            margin: 20px 0;
+            text-align: center;
+            border-radius: 5px;
+        }
+        
+        .command-box {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1em;
+        }
+        
+        .yellow-highlight {
+            background: #fff9e6;
+            border: 1px solid #f39c12;
+            padding: 10px 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+		
+        .summary-header {
+            font-size: 1.8em;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            color: #2c3e50;
+            padding: 0 0 10px 0;
+            border-bottom: 3px solid #dee2e6;
+        }
+        
+        .summary-container {
+            display: flex;
+            gap: 40px;
+            padding: 25px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            background-color: #fcfcfc;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .column-box {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .fixed-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: #2563EB; /* 어두운 배경색 */
+            color: white;
+            padding: 15px 40px;
+            z-index: 1000; 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            height: 60px;
+            display: flex;
+            align-items: center;
+        }
+
+        .back-link {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1em;
+            transition: color 0.2s;
+        }
+
+        .back-link:hover {
+            color: #3498db; /* 마우스 오버 시 파란색으로 변경 */
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 8px; /* 경계선을 둥글게 추가 */
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .column-title {
+            font-size: 1.3em;
+            color: #34495e;
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-weight: bold;
+            border-left: none;
+            border-bottom: 2px solid #ecf0f1;
+            padding-left: 0;
+            padding-bottom: 5px;
+        }
+
+        .check-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .check-list li {
+            padding: 6px 0;
+            font-size: 1em;
+            color: #555;
+            position: relative;
+            padding-left: 25px;
+            line-height: 1.5;
+        }
+
+        .check-list li::before {
+            content: '✓';
+            color: #3498db; 
+            font-weight: bold;
+            font-size: 1.2em;
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+		/* 모바일 대응 */
+        @media (max-width: 768px) {
+            .summary-container {
+                flex-direction: column;
+                gap: 20px;
+            }
+            .feature-grid {
+                flex-direction: column;
+            }
+            .feature-item {
+                margin-bottom: 15px;
+            }
+        }
+        .feature-grid {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            margin-top: 20px;
+            padding: 20px 0;
+        }
+        
+        .feature-item {
+            flex: 1;
+            background: #f8f8ff; /* 연한 보라색 배경 */
+            border: 1px solid #e0e0f8;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+        }
+        
+        .feature-icon {
+            font-size: 3em;
+            margin-bottom: 10px;
+            color: #9b59b6; /* 보라색 계열 강조 */
+        }
+        
+        .feature-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        
+        .feature-description {
+            font-size: 0.9em;
+            color: #666;
+        }
+    </style>
+    </style>
+</head>
+<body>
+	<div class="fixed-header">
+        <a href="Index2.html" class="back-link">
+            &#9664; 포트폴리오 페이지로 돌아가기
+        </a>
+    </div>
+	<div class="container">
+        <div class="info-box">
+            <p><strong>ℹ️ 택탄 프로젝트를 진행하며 작성한 "DropBox 오브젝트" 관련 시스템 문서입니다.</strong></p>
+            <ul>
+                <li>기존 회사에서 작성한 내용을 재구성해 만든 문서입니다.</li>
+                <li>포트폴리오 제공을 위해 기존 기획서에 문제 소지가 될만한 내용은 일괄 편집했습니다.</li>
+                <li>실제 개발한 내용도 목표한 바를 충분히 수행했으며, 완성도 높게 나온 시스템입니다.</li>
+            </ul>
+        </div>
+		
+		<!-- ⚡️ 시스템 설계 요약 섹션 시작 -->
+        <h2>시스템 설계 요약</h2>
+            <div class="summary-container">
+                
+                <div class="column-box">
+                    <h4 class="column-title">핵심 설계 포인트</h4>
+                    <ul class="check-list">
+                        <li>필드 보상 획득 경험 강화</li>
+                        <li>즉시 / 운송 보상 이원화</li>
+                        <li>몬스터 처치 보상 시스템 확장</li>
+                        <li>PvP 요소로 확장 가능한 구조</li>
+                        <li>데이터 기반 유연한 설정</li>
+                    </ul>
+                </div>
+                
+                <div class="column-box">
+                    <h4 class="column-title">기대 효과</h4>
+                    <ul class="check-list">
+                        <li>능동적인 보상 횏득 경험</li>
+                        <li>전략적 선택과 긴장감 제공</li>
+                        <li>협동 / 경쟁 콘텐츠로 자연스러운 유도</li>
+                        <li>리스크-리워드 밸런스 구현</li>
+                    </ul>
+                </div>
+
+            </div>
+        <!-- ⚡️ 시스템 설계 요약 섹션 끝 -->
+        
+        <h2>1. 개요</h2>
+        
+        <img src="Portfolio_Img\DropBox\DropBox_Simple_Process.png" width="800", height="auto">
+
+        <p>DropBox 오브젝트는 필드 내에서 기사단이 상호작용 할 수 있는 보상 오브젝트이다.</p>
+        
+        <ul>
+            <li>인터랙션(루팅)을 통해 단일 아이템 보상을 제공하는 기능을 수행한다.</li>
+            <li>보상의 지급 방식은 <strong>"즉시 지급형"</strong>과 <strong>"운송 완료 후 지급"</strong> 두 가지로 구분된다.
+                <ul>
+                    <li>보상의 종류 및 지급 방식에 따라 오브젝트의 외형이 달라진다.</li>
+                </ul>
+            </li>
+            <li>DropBox 1회 인터랙션 시 획득할 수 있는 아이템은 1개로 제한한다.
+                <ul>
+                    <li><strong>"복수의 아이템 및 자원"</strong>을 보상으로 제공할 경우엔 아이템 박스 형태로 제공한다.</li>
+                </ul>
+            </li>
+        </ul>
+        
+        <h3>1.1. 목적</h3>
+        
+        <p>DropBox는 플레이어가 기사단을 직접 조작하여 <strong>"필드에서 보상을 획득하는 경험"</strong>을 제공하기 위한 오브젝트로 설계한다.</p>
+        
+        <ul>
+            <li>일방적인 보상 지급 방식에서 벗어나 기사단으로 필드의 오브젝트를 상호작용해 보상을 얻는 경험을 제공한다.
+                <ul>
+                    <li>이를 통해 보상 획득에 따른 행동 체감을 강화시킬 수 있게 만든다.</li>
+                </ul>
+            </li>
+            <li>또한, 루팅하는 과정에서 다른 유저와의 경쟁, 회수, 탈취 등 <strong>"PvP 요소로 확장 가능한 여지"</strong>를 제공한다.
+                <ul>
+                    <li>루팅 요소를 제공함으로서 MMO 환경에서 서로 간 <strong>"협동 / 배신 / 견제"</strong>할 수 있는 환경을 제공한다.</li>
+                </ul>
+            </li>
+        </ul>
+        
+        <p>DropBox는 다음과 같은 상황에서 스폰되며, 플레이어에게 보상 기회를 제공한다.</p>
+        
+        <ul>
+            <li>몬스터 처치 시 Drop 보상의 일환으로, <strong>"등급에 따라 랜덤하게 DropBox를 생성"</strong>한다.
+                <ul>
+                    <li>몬스터를 처치하고 기사단이 직접 보상을 루팅하는 경험을 제공한다.</li>
+                    <li>서로 더 좋은 보상을 차지하기 위해 견제 / 협동할 수 있는 환경을 구성.</li>
+                </ul>
+            </li>
+        </ul>
+        
+        <h3>1.2. 핵심 기능</h3>
+        
+        <p>DropBox 오브젝트에 다음과 같은 핵심 기능을 추가, 기사단이 루팅해 아이템 보상을 얻을 수 있게 설계한다.</p>
+        
+        <h4>1.2.1. 아이템 별 DropBox 오브젝트를 정의할 수 있게 설정</h4>
+        
+        <ul>
+            <li>DropBox는 FieldObject이자 아이템이다.
+                <ul>
+                    <li>실제 아이템 1개를 DropBox라는 필드 오브젝트로 스폰시킬 수 있게 만든다.</li>
+                </ul>
+            </li>
+            <li>각 아이템 별로 DropBox로 스폰했을 때 다음과 같은 FieldObject 속성을 달리 부여할 수 있도록 구조화한다.
+                <ul>
+                    <li>DropBox의 <strong>리소스 외형 / InteractionTime / LifeTime</strong></li>
+                </ul>
+            </li>
+        </ul>
+        
+        <h4>1.2.2. 즉시 보상 / 운송 완료 보상을 구분</h4>
+        
+        <p>루팅을 완료했을 때 다음과 같이 보상을 지급하는 방식을 구분, DropBox의 사용자 경험을 구분시킬 수 있도록 구조화한다.</p>
+        
+        <ul>
+            <li><strong>즉시 보상</strong> - 인터랙션 완료와 동시에 사용자 인벤에 보상 지급
+                <div class="warning-box">
+                    <strong>⚠️</strong> 짧은 루프, 빠른 피드백 중심의 보상을 설계할 때 사용.
+                </div>
+            </li>
+            <li><strong>운송 완료 보상</strong> - 인터랙션 완료와 동시에 기사단이 DropBox를 지니며, 유저성으로 복귀가 완료됐을 때 사용자 인벤에 보상 지급
+                <div class="warning-box">
+                    <strong>⚠️</strong> 장기 루프, 회수 리스크를 고려한 보상 설계할 때 사용.
+                </div>
+            </li>
+        </ul>
+        
+        <h4>1.2.3. 몬스터 처치 시 DropBox 스폰</h4>
+        
+        <p>특정 몬스터를 처치했을 때 DropBox가 처치된 대상 인근으로 스폰될 수 있게 구조화한다.</p>
+        
+        <p>구조화 시 다음과 같은 사항을 고려, 스폰될 수 있게 정의한다.</p>
+        
+        <ul>
+            <li>처치된 대상을 기준으로 반경 N 미터 이내에 스폰될 수 있게 정의.</li>
+            <li>최대 N개의 DropBox가 스폰이 가능하게 정의.</li>
+            <li>확률에 따라 DropBox가 스폰될 수 있게 정의.</li>
+        </ul>
+        
+        <p>처치에 기여한 유저에 한해 DropBox를 인터랙션할 수 있게 시스템을 구성한다.</p>
+        
+        <ul>
+            <li>이는 몬스터에 따라 데이터를 통해 옵셔널하게 정의할 수 있게 만든다.
+                <ul>
+                    <li>A 몬스터가 스폰한 DropBox는 처치에 기여한 유저만 인터랙션 가능.</li>
+                    <li>B 몬스터가 스폰한 DropBox는 처치 기여와 관계없이 인터랙션 가능.</li>
+                </ul>
+            </li>
+        </ul>
+        
+        <h4>1.2.4. DropBox 선택 UI 추가</h4>
+        
+        <p>DropBox 오브젝트가 필드에 스폰된 상태에서 선택했을 때 어떤 아이템인지 안내하는 역할의 UI를 추가한다.</p>
+        
+        <ul>
+            <li>이를 통해 사용자들이 스폰된 DropBox 오브젝트가 어떤 아이템인지 확인할 수 있게 만드는 것을 목표로 한다.</li>
+        </ul>
+        
+        <h2>2. ItemData 맵핑</h2>
+        
+        <img src="Portfolio_Img\DropBox\DropBox_ItemData_Mapping.png" width="800", height="auto">
+        
+        <p>우리 게임에 존재하는 <strong>모든 아이템별로 DropBox Field_Object를 맵핑</strong>할 수 있도록 구조화한다.</p>
+        
+        <ul>
+            <li>DropBox는 아이템을 필드 상에 스폰시키기 위한 새로운 Object이다.</li>
+            <li>이 점을 고려, 모든 아이템이 필드에 스폰될 수 있도록 ItemData에 <strong>"DropBox 오브젝트 정보를 매핑"</strong>할 수 있는 구조로 설계한다.
+                <ul>
+                    <li>ItemData에 맵핑은 DropBoxDataname 데이터를 통해 정의할 수 있게 만든다.</li>
+                </ul>
+            </li>
+        </ul>
+        
+        <p>이를 통해 각 아이템 등급별로 다음과 같은 Field_Object 속성을 달리 적용하는 것을 목표로 한다.</p>
+        
+        <ul>
+            <li><strong>InteractionTime</strong> - DropBox 루팅 시간.
+                <ul>
+                    <li>Field_obj.xlsx → Data Sheet → InteractionTime Column을 참조.</li>
+                </ul>
+            </li>
+            <li><strong>LifeTime</strong> - DropBox 스폰 후 유지시간.
+                <ul>
+                    <li>Field_obj.xlsx → Data Sheet → LifeTime Column을 참조.</li>
+                </ul>
+            </li>
+            <li><strong>Resource</strong> - DropBox가 필드에 스폰됐을 때의 리소스.
+                <ul>
+                    <li>Field_obj.xlsx → Data Sheet → Resource Column을 참조.</li>
+                </ul>
+            </li>
+            <li>이를 통해 사용자들이 스폰된 DropBox 오브젝트가 어떤 아이템인지 확인할 수 있게 만드는 것을 목표로 한다.</li>
+        </ul>
+        
+        <h2>3. DropBox 스폰</h2>
+        
+        <p>DropBox는 다음과 같은 형태로 필드 상에 스폰이 가능하게 설계한다.</p>
+        
+        <h3>3.1. 명령어 스폰</h3>
+        
+        <p>라이브 운영 중 운영자에 한해 특정 명령어를 입력하면 DropBox를 필드 상에 스폰할 수 있게 만든다.</p>
+        
+        <ul>
+            <li>운영 혹은 개발 중 테스트 환경에서 DropBox를 다음과 같은 명령어를 사용해 스폰될 수 있게 구조화한다.</li>
+        </ul>
+        
+        <div class="command-box">
+            Admin DropBox {ItemId} {ItemCount} {Pos_X} {Pos_Y} {Radius}
+        </div>
+        
+        <ul>
+            <li><strong>작성 예시</strong> - Admin DropBox (Item.100) 3 800 600 1.5</li>
+            <li><strong>동작 예시</strong> - ItemData상에 (Item.100)으로 정의된 아이템을 월드 x : 800 y : 600좌표를 기준으로 반경 1.5Grid에 3개를 DropBox로 스폰한다.
+                <ul>
+                    <li>복수 스폰 시 겹쳐서 스폰되는 것이 아닌 유효한 위치에만 스폰될 수 있게 처리한다.</li>
+                </ul>
+            </li>
+            <li>명령어로 스폰된 모든 DropBox는 스폰된 순간부터 <strong>LifeTime</strong>을 적용받는다.</li>
+        </ul>
+        
+        <h3>3.2. 몬스터 처치 스폰</h3>        
+        <img src="Portfolio_Img\DropBox\DropBox_Kill_Monster.png" width="800", height="auto">
+        <p>특정 몬스터 처치 시 특정 Item을 필드 상에 스폰할 수 있게 만든다.</p>
+        
+        <ul>
+            <li>몬스터를 기준으로 <strong>"반경 N그리드 이내 DropBox"</strong>를 스폰, 기사단들이 이를 루팅할 수 있게 만드는 것을 목표로 한다.</li>
+            <li>스폰 범위 및 개수는 <strong>Field_Monster.xlsx 테이블</strong> 에서 정의할 수 있게 만들어 특정 몬스터에게만 DropBox가 스폰될 수 있게 구조화한다.</li>
+            <li>구조화 시 다음과 같은 사항들을 고려해 정의가 가능하게 만든다.
+                <ul>
+                    <li>몬스터 처치 시 확률에 따라 DropBox가 스폰될 수 있게 정의.</li>
+                    <li>처치 시 반경 몇 Grid내에 DropBox를 스폰시킬지 정의.</li>
+                    <li>복수의 DropBox를 스폰시킬 수 있게 유연하게 보상 설계가 가능하게 구조화.</li>
+                    <li>DropBox 스폰 시 랜덤 확률을 통해 특정 등급의 DropBox를 스폰이 가능하게 구조화.
+                        <ul>
+                            <li>RewardData를 활용해 몬스터 인근에 DropBox가 스폰될 수 있게 만든다.</li>
+                        </ul>
+                    </li>
+                    <li>처치 기여도에 따른 소유권 적용 유/무.
+                        <ul>
+                            <li>소유권이 적용될 경우 몬스터가 DropBox를 스폰했을 때 처치에 기여한 유저만 인터랙션이 가능하다.</li>
+                            <li>ex - 자르보그(차원 몬스터) 처치에 관여한 유저만 자르보그가 스폰시킨 DropBox 인터랙션 가능.</li>
+                            <li>몬스터 처치 후 최초 DropBox가 스폰됐을 때에만 해당 룰이 적용되며,</li>
+                            <li>소유권이 적용되지 않을 경우 처치 기여와 관계없이 누구나 인터랙션이 가능하다.</li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            <li>몬스터 처치로 스폰된 모든 DropBox는 스폰된 순간부터 <strong>LifeTime</strong>을 적용 받는다.</li>
+        </ul>
+        
+        <h2>4. 기본 규칙</h2>
+        
+        <p>모든 DropBox는 ContentID의 Enum이 DropBox일 경우 다음과 같은 규칙을 따른다.</p>
+        
+        <h3>4.1. 루팅</h3>
+        
+        <p>기사단이 DropBox를 인터랙션 하는 행위를 <strong>"루팅"</strong>이라 정의한다.</p>
+        
+        <ul>
+            <li>루팅한 DropBox에 정의된 InteractionTime을 참조, 해당 시간동안 루팅을 유지해야 루팅이 완료된다.
+                <ul>
+                    <li><strong>Field_Obj.xlsx → Data Sheet → InteractionTime Column</strong>을 통해 루팅 시간을 정의.</li>
+                </ul>
+            </li>
+            <li>DropBox는 <strong>"일반 기사단"</strong>만 인터랙션이 가능하다.
+                <ul>
+                    <li>전략병기와 같이 사용자가 컨트롤 할 수 있는 특수 기사단을 가지곤 인터랙션이 불가능하다.</li>
+                </ul>
+            </li>
+            <li>DropBox는 다음과 같은 방법을 통해 루팅 인터랙션이 가능하다.
+                <ul>
+                    <li>유저 성 출진.</li>
+                    <li>기사단 슬롯 드래그.</li>
+                    <li>DropBox 선택시 출력되는 팝업 UI에서 루팅 버튼 입력.</li>
+                    <li>기사단 직접 드래그.</li>
+                </ul>
+            </li>
+        </ul>
+        
+        <h3>4.2. 루팅 실패 처리</h3>
+        
+        <p>DropBox는 다음과 같은 상황일 때 인터랙션에 실패한다.</p>
+        
+        <ul>
+            <li><strong>"특수 유닛이 구성된 기사단"</strong>을 가지고 인터랙션 시도 시 실패하며, 다음과 같은 메시지를 출력한다.
+                <ul>
+                    <li>StringKey - STRING_TACTICAL_BRIDGE_ACTIVATE_INTERACTION_FAIL_SPECIAL_UNIT</li>
+                    <li>String - {ACTOR_UNIT_NAME}|hpp(은,는) 상호작용이 불가능합니다.</li>
+                    <li>{ACTOR_UNIT_NAME} - 인터랙션을 시도한 전략병기의 이름.</li>
+                </ul>
+            </li>
+            <li>기사단이 <strong>"이동이 불가한 지형"</strong>에 DropBox를 인터랙션 시도 시 실패하며, 다음과 같은 메시지를 출력한다.
+                <ul>
+                    <li>StringKey - STRING_SQUAD_CANNOT_UPDATE_NEAL_COLLISION</li>
+                    <li>String - 이동할 수 없는 위치입니다. 장애물 또는 공간을 확인해 주세요.</li>
+                </ul>
+            </li>
+            <li>DropBox 최대 보유 개수를 초과해 DropBox를 인터랙션 시도 시 실패하며, 다음과 같은 메시지를 출력한다.
+                <ul>
+                    <li>StringKey - STRING_DROPBOX_CANNOT_INTERACTION_MAX_COUNT_DROPBOX</li>
+                    <li>String - 드랍박스 최대 소지 수량을 초과하여 인터랙션 할 수 없습니다.</li>
+                </ul>
+            </li>
+        </ul>
+        
+        <h3>4.3. 루팅 완료</h3>
+        
+        <p>기사단이 DropBox에 정의된 InteractionTime 동안 루팅을 유지하면 <strong>"루팅 완료"</strong>가 된다.</p>
+        
+        <ul>
+            <li>DropBox는 오직 <strong>"1번만 인터랙션"</strong>이 가능하다.
+                <ul>
+                    <li>DropBox는 1회성 인터랙션으로만 동작되게 만든다.</li>
+                </ul>
+            </li>
+            <li>기사단이 루팅을 완료 할 때마다 루팅 완료 연출이 적용된다.
+                <ul>
+                    <li>인터랙션 카운트가 0이 되어 DropBox가 디스폰되면 연출을 적용, 자연스럽게 제거되게 만든다.</li>
+                </ul>
+            </li>
+            <li>DropBox제거와 동시에 DropBox에 정의된 즉시 보상 / 운송 완료 보상 규칙에 따라 사용자에게 아이템 보상이 제공된다.</li>
+        </ul>
+        
+        <h3>4.4. 즉시 보상</h3>      
+        <img src="Portfolio_Img\DropBox\DropBox_Instant_Reward.png" width="800", height="auto">
+        <p>DropBox의 인터랙션이 완료되면 해당 기사단을 운용하는 사용자에게 보상이 즉시 제공되는 형태를 <strong>"즉시 제공"</strong> 규칙이라 정의한다.</p>
+        
+        <ul>
+            <li>즉시 제공은 DropBox 필드 오브젝트에 정의된 <strong>IsTransportReward Column</strong>의 값이 <strong>"FALSE"</strong>인 경우 해당 규칙을 수행한다.</li>
+        </ul>
+        
+        <h3>4.5. 운송 완료 보상</h3>
+        <img src="Portfolio_Img\DropBox\DropBox_Transport_Reward.png" width="800", height="auto">
+        <p>DropBox의 인터랙션이 완료되면 해당 기사단에게 아이템이 적용되고 유저성으로 복귀 시 보상이 제공되는 형태를 <strong>"운송 완료 보상"</strong> 규칙이라 정의한다.</p>
+        
+        <ul>
+            <li>운송 완료 보상은 DropBox 필드 오브젝트에 정의된 <strong>IsTransportReward</strong>의 값이 <strong>"TRUE"</strong>인 경우 해당 규칙을 수행한다.</li>
+            <li>DropBox를 지닌 상태에서 <strong>"주둔 / 워프 / 지원(유저성 지원) / 공격대 참여 / 전투"</strong> 등.. 기사단의 모든 행동들이 가능하다.</li>
+        </ul>
+        
+        <h4>4.5.1. DropBox 최대 보유 개수</h4>
+        
+        <img src="Portfolio_Img\DropBox\DropBox_MaxCount.png" width="800", height="auto">
+        <p>기사단은 운송 완료 보상을 제공하는 DropBox를 최대 N개까지 보유 할 수 있다.</p>
+        
+        <ul>
+            <li>복수의 DropBox 아이템 보상의 운송이 가능하게 만들기 위한 장치이다.</li>
+            <li>기사단 1기당 보유할 수 있는 운송 완료 보상 DropBox의 개수는 <strong>MaxTransportDropBox 데이터</strong>를 통해 정의한다.</li>
+            <li>기사단은 해당 값을 초과해 DropBox를 보유할 수 없다.</li>
+            <li>이미 DropBox의 최대 보유 개수를 지닌 상태에서 DropBox를 인터랙션 시도 시 실패 처리한다.</li>
+        </ul>
+        
+        <h4>4.5.2. 루팅 완료 시 기사단 안내</h4>
+        <img src="Portfolio_Img\DropBox\DropBox_Guide_Squad.png" width="800", height="auto">
+        <p>기사단이 운송 완료 보상의 DropBox를 보유한 상태라면 첨부된 표와 같이 <strong>"루팅 박스의 보유 유/무"</strong>를 안내한다.</p>
+        
+        <ul>
+            <li>피아 구분없이 DropBox를 지닌 모든 기사단에게 표현된다.</li>
+            <li>이를 통해 아군 / 적군의 기사단이 DropBox를 지녔는지 확인하고 이를 통해 전략적인 선택을 할 수 있게 만든다.
+                <ul>
+                    <li>적이 들고 있을 경우 <strong>"이동속도가 빠른 기사단"</strong>을 출진해 DropBox를 뺏으려는 선택을 한다던가.</li>
+                    <li>아군이 들고 있을 경우 이를 보호해주던가.</li>
+                </ul>
+            </li>
+            <li>기사단이 보유 중인 아이템 등급에 따라 기사단에게 안내되는 아이콘이 달리 적용될 수 있게 처리한다.
+                <ul>
+                    <li>G1 등급 아이템을 지닌 경우 - G1 DropBox 아이콘</li>
+                    <li>G2 등급 아이템을 지닌 경우 - G2 DropBox 아이콘</li>
+                    <li>이를 통해 모든 사용자들이 기사단이 현재 지니고 있는 DropBox의 등급을 판단하게 만든다.</li>
+                </ul>
+            </li>
+        </ul>
+        
+        <h4>4.5.3. 운송 중 전멸시 처리</h4>
+        <img src="Portfolio_Img\DropBox\DropBox_Kill_Squad.png" width="800", height="auto">
+        <p>첨부된 그림과 같이 기사단이 운송 완료 보상으로 구분된 DropBox를 가진 채로 기사단이 전멸 시 지니고 있던 DropBox를 모두 드랍한다.</p>
+        
+        <ul>
+            <li>현재 기사단이 보유하고 있는 모든 DropBox를 전멸과 동시에 인근에 스폰한다.
+                <ul>
+                    <li>DropBox로 획득한 아이템 개별로 스폰되며, 겹치치 않은 상태에서 유효한 위치에만 스폰된다.</li>
+                    <li>동일한 아이템을 먹었더라도 각 개별로 DropBox형태로 스폰될 수 있게 처리한다.</li>
+                </ul>
+            </li>
+            <li>기사단을 기준으로 <strong>"반경 N Grid이내"</strong> DropBox를 스폰할 수 있도록 만든다.
+                <ul>
+                    <li><strong>"기사단 볼륨 + 아래의 데이터 값"</strong>을 통해 범위를 정의할 수 있게 만든다.</li>
+                    <li>Field_Obj.xlsx → Const Sheet → BoxDropAreaAddVolume의 값</li>
+                    <li>BoxDropAreaAddVolume의 값이 1.0(반지름)이고 기사단 볼륨의 반지름이 1이라면 다음과 같이 동작한다.
+                        <ul>
+                            <li>기사단을 기준으로 볼륨 4 Grid(BoxDropAreaAddVolume + 기사단 볼륨) 이내에 DropBox가 드랍된다.</li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            <li>전멸 후 유저 성 귀환 시 아이템 보상은 획득할 수 없다.</li>
+            <li>드랍한 DropBox는 스폰된 순간부터 <strong>LifeTime</strong>을 적용받는다.</li>
+        </ul>
+        
+        <h3>4.6. DropBox 유지시간</h3>
+        
+        <p>모든 DropBox는 스폰됨과 동시 <strong>"유지 시간"</strong>이 적용된다.</p>
+        
+        <ul>
+            <li>DropBox의 유지 시간은 아래 데이터를 참조해 적용한다.
+                <ul>
+                    <li><strong>field_obj.xlsx → Data Sheet → LifeTime Column</strong>에 작성된 값을 통해 스폰 후 유지시간이 적용된다.</li>
+                    <li>작성 예시 - 300</li>
+                    <li>동작 예시 - DropBox가 스폰 후 <strong>"300초(5분)"</strong>의 유지시간이 적용된다.</li>
+                </ul>
+            </li>
+            <li>유지시간이 만료되면 디스폰 되며, 연출을 적용, 자연스럽게 DropBox가 제거되게 만든다.</li>
+            <li>기사단이 루팅을 위해 DropBox로 이동 중에 디스폰 된다면 다음과 같이 처리한다.
+                <ul>
+                    <li>대상을 잃음과 동시에 기사단의 이동을 정지시키며, 유저 성으로 되돌려 보낸다</li>
+                </ul>
+            </li>
+            <li>기사단이 루팅 중에 DropBox가 디스폰 된다면 다음과 같이 처리한다.
+                <ul>
+                    <li>루팅 중 디스폰이 되더라도 루팅을 완료시켜 보상을 제공한다.</li>
+                </ul>
+            </li>
+        </ul>
+        
+        <h3>4.7. DB 저장</h3>
+        
+        <p>모든 DropBox는 서버가 강제로 종료될 경우 다음과 같이 처리한다.</p>
+        
+        <ul>
+            <li>유지시간과 관계 없이 월드에 스폰됐던 DropBox는 서버 종료 시 일괄 삭제된다.
+                <ul>
+                    <li>DropBox는 LifeTime이 존재하는 임시 객체이므로 서버 종료와 동시에 일괄 삭제하는 것을 원칙으로 한다.</li>
+                </ul>
+            </li>
+            <li>단, 기사단이 운송 완료 보상 DropBox를 지니고 있는 상태라면 이는 DB에 저장, 서버 종료 후에도 보상을 획득할 수 있게 만든다.</li>
+        </ul>
+        
+        <h2>5. UI 추가</h2>
+        
+        <p>DropBox와 관련해서 다음과 같은 UI 정보를 추가한다.</p>
+        
+        <h3>5.1. DropBox 팝업 UI</h3>
+        <img src="Portfolio_Img\DropBox\DropBox_PopUP_UI.png" width="800", height="auto">
+        <p>첨부된 그림과 같이 필드에 스폰된 DropBox를 선택 시 <strong>"팝업 UI"</strong>가 출력되며, 구성은 다음과 같다.</p>
+        
+        <ul>
+            <li><strong>아이템 툴팁</strong>
+                <ul>
+                    <li>스폰된 DropBox에 맵핑된 아이템의 다음과 같은 정보가 노출된다.</li>
+                    <li>아이템 아이콘
+                        <ul>
+                            <li>ItemData.xlsx → Data Sheet → Icon Column에 정의된 아이콘 리소스 출력.</li>
+                        </ul>
+                    </li>
+                    <li>아이템 이름
+                        <ul>
+                            <li>ItemData.xlsx → Data Sheet → Name Column에 정의된 스트링 키 출력.</li>
+                        </ul>
+                    </li>
+                    <li>아이템 설명
+                        <ul>
+                            <li>ItemData.xlsx → Data Sheet → Desc Column에 정의된 스트링 키 출력.</li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            <li><strong>인터랙션 버튼</strong>
+                <ul>
+                    <li>사용자가 DropBox에 기사단을 보내 루팅이 가능하게 만드는 역할의 버튼 UI이다.</li>
+                    <li>아래의 StringKey를 참조해 버튼 UI를 안내한다.</li>
+                    <li>StringKey - UI_FieldObject_Looting</li>
+                    <li>String - 습득</li>
+                </ul>
+            </li>
+            <li><strong>기사단 대기 옵션</strong>
+                <ul>
+                    <li>기사단이 DropBox를 습득 완료했을 때 위치 유지 유/무를 결정하는 역할의 옵션 토글 버튼이다.</li>
+                    <li>옵션을 체크한 채로 인터랙션을 시도할 경우 인터랙션 완료 후 기사단이 해당 위치에 대기한다.</li>
+                    <li>반대의 경우엔 인터랙션 완료 후 기사단이 유저성으로 복귀한다.</li>
+                    <li>해당 토글 버튼을 안내하는 텍스트는 아래의 StringKey를 참조해 출력한다.</li>
+                    <li>StringKey - UI_CMN_Wait_Looting_Interaction</li>
+                    <li>String - 습득 후 위치 유지</li>
+                </ul>
+            </li>
+        </ul>
+        
+        <h2>6. DropBox 연출</h2>
+        
+        <p>DropBox가 필드에 스폰 및 디스폰될 때 다음과 같은 연출을 적용, 월드에 표현될 때 자연스럽게 연출되도록 만든다.</p>
+        
+        <ul>
+            <li>또한, DropBox의 연출 관련된 항목을 정의할 수 있도록 다음과 같은 BP를 추가해 DropBox의 속성을 관리할 수 있게 만든다.
+                <ul>
+                    <li>BluePrint 이름 - BP_DropBox</li>
+                    <li>BP Class - Dynamic Event Skeletal Mesh Actor</li>
+                </ul>
+            </li>
+        </ul>
+        
+        <h3>6.1. Spawn 연출</h3>
+        
+        <p>DropBox가 스폰될 때 연출을 출력할 수 있도록 BP 상에 다음과 같은 Anim 속성이 적용될 수 있게 만든다.</p>
+        
+        <ul>
+            <li>BP_DropBox의 메쉬 컴포넌트 → Anim 속성에 <strong>"Spawn"</strong> 키를 적용, 스폰 시 출력될 연출을 정의할 수 있게 만든다.</li>
+        </ul>
+        
+        <h3>6.2. Despawn - LifeTime 만료</h3>
+        
+        <p>DropBox의 유지시간 이 만료되어 디스폰될 때 연출을 출력할 수 있도록 BP 상에 다음과 같은 Anim 속성이 적용될 수 있게 만든다.</p>
+        
+        <ul>
+            <li>BP_DropBox의 메쉬 컴포넌트 → Anim 속성에 <strong>"Despawn"</strong> 키를 적용, 유지시간이 만료되어 디스폰 시 출력될 연출을 정의할 수 있게 만든다.</li>
+        </ul>
+        
+        <h3>6.3. Die - 인터랙션 횟수 초과해 제거될 경우</h3>
+        
+        <p>기사단이 DropBox의 루팅을 완료했을 때 연출을 출력할 수 있도록 BP 상에 다음과 같은 Anim 속성이 적용될 수 있게 만든다.</p>
+        
+        <ul>
+            <li>BP_DropBox의 메쉬 컴포넌트 → Anim 속성에 <strong>"Die"</strong> 키를 적용, 기사단이 루팅을 완료했을 때 출력될 연출을 정의할 수 있게 만든다</li>
+        </ul>
+        
+        <h3>6.4. Idle</h3>
+        
+        <p>DropBox가 필드에 스폰된 상태에서 다음과 같은 사항을 연출될 수 있게 구조화한다.</p>
+        
+        <ul>
+            <li>DropBox가 포함하고 있는 아이템의 등급을 안내할 수 있도록 IdleEffect가 적용될 수 있게 만든다.</li>
+            <li>Field_Object의 리소스를 정의하는 <strong>"FieldResDetail 에디터 에셋"</strong>의 속성 중 <strong>"Active Effect List → Idle Effect"</strong>를 통해 해당 상태를 연출한다.</li>
+        </ul>
+        
+        <h2>7. ItemData 데이터 추가</h2>
+        
+        <p>각 아이템별로 DropBox 속성을 정의할 수 있도록 <strong>"ItemData.xlsx → Data Sheet"</strong>에 다음과 같은 컬럼을 추가한다.</p>
+        
+        <h3>7.1. DropBoxDataname Column 추가</h3>
+        
+        <p>각 아이템 별로 필드 상에 스폰시켰을 때 어떤 DropBox 속성을 지닐지 결정하는 역할의 컬럼이다.</p>
+        
+        <ul>
+            <li>데이터 형식은 <strong>"ContentID"</strong>이며, Field_Obj.xlsx에 정의된 DataName을 작성한다.</li>
+            <li>작성 예시 - DropBox_InstantReward_G1</li>
+            <li>동작 예시 - 해당 아이템을 필드에 스폰 시 Field_Obj에 "DropBox_InstantReward_G1"로 정의된 DropBox가 스폰된다.</li>
+            <li>DropBox로 정의되지 않은 Field_Obj를 해당 데이터에 연결 시엔 스폰에 실패되게 처리한다.
+                <ul>
+                    <li>Only DropBox 오브젝트만 연결이 가능하게 만든다.</li>
+                </ul>
+            </li>
+        </ul>
+        
+        <h2>8. Field_Obj 데이터 추가</h2>
+        
+        <p>Field_Obj.xlsx 테이블 상에서 DropBox를 구분, 정의할 수 있도록 테이블 상에 다음과 같은 사항을 추가한다.</p>
+        
+        <h3>8.1. EnumCategory 추가</h3>
+        
+        <p><strong>"DropBox"</strong>를 Field_Obj.xlsx에서 구분할 수 있도록 관련 Enum을 추가한다.</p>
+        
+        <ul>
+            <li>EnumCategory에 <strong>"DropBox"</strong>를 추가, DropBox 오브젝트와 관련된 룰을 정의할 수 있게 만든다.
+                <ul>
+                    <li>작성 예시 - (DropBox.100)</li>
+                </ul>
+            </li>
+            <li>DropBox는 항상 Interaction이 가능해야 하는 오브젝트이다.</li>
+            <li>해당 사항을 고려하여 Field_Obj_Attr.xlsx 상의 DropBox로 정의된 오브젝트는 항상 FieldObjectType을 <strong>"InteractionObject"</strong>로 작성한다.</li>
+        </ul>
+        
+        <h3>8.2. IsTransportReward Column 추가</h3>
+        
+        <p>DropBox를 인터랙션 완료 했을 때 <strong>"보상 방식"</strong>을 결정하는 역할의 신규 데이터이다.</p>
+        
+        <ul>
+            <li><strong>"Field_Obj.xlsx → Data Sheet → IsTransportReward Column"</strong>을 추가한다.</li>
+            <li>데이터 형식은 bool이다.</li>
+            <li>해당 컬럼에 작성된 bool 값에 따라 DropBox의 보상 방식이 다음과 같이 구분되어 처리된다.
+                <ul>
+                    <li>True - DropBox를 인터랙션 시 운송 완료 보상 규칙이 적용되며, 유저 성 귀환 시 사용자 인벤토리에 보상이 지급된다.</li>
+                    <li>False - DropBox를 인터랙션 시 즉시 보상 규칙이 적용되며, 사용자 인벤토리에 보상이 지급된다.</li>
+                </ul>
+            </li>
+            <li>DropBox 외에 다른 Field_Object들은 해당 값에 영향을 받지 않는다.</li>
+        </ul>
+        
+        <h3>8.3. Field_Obj Const 추가</h3>
+        
+        <p>DropBox의 상수 값을 정의할 수 있도록 다음과 같은 데이터를 추가한다.</p>
+        
+        <h4>8.3.1. MaxTransportDropBox</h4>
+        
+        <p>기사단이 <strong>최대 보유 가능한 DropBox</strong>를 정의하는 역할의 데이터를 추가한다.</p>
+        
+        <ul>
+            <li>Field_Obj.xlsx → Const Sheet → MaxTransportDropBox Row를 추가.</li>
+            <li>기사단이 <strong>최대 보유 가능한 DropBox</strong>를 상수로 정의할 수 있게 만든다.</li>
+            <li>데이터 형식은 int이다.</li>
+            <li>작성 예시 - 5</li>
+            <li>동작 예시 - 각 기사단별로 DropBox를 보유할 수 있는 최대 개수는 5개가 된다.</li>
+        </ul>
+        
+        <h2>9. Field_Monster 데이터 추가</h2>
+        
+        <p>특정 몬스터를 처치 시 DropBox 스폰을 시키기 위해 <strong>"Field_Monster.xlsx → Data Sheet"</strong>에 다음과 같은 데이터를 추가한다.</p>
+        
+        <h3>9.1. RewardDropBox Coulmn 추가</h3>
+        
+        <p>몬스터를 처치 했을 때 어떤 DropBox의 보상을 적용할지 결정하는 역할의 데이터이다.</p>
+        
+        <ul>
+            <li><strong>"Field_Monster.xlsx → Data Sheet → RewardDropBox Column"</strong>을 추가한다.</li>
+            <li>해당 컬럼에 값이 있는 몬스터 데이터일 경우 처치 시 스폰시킬 DropBox를 스폰한다.</li>
+            <li>RewardData를 참조할 수 있도록 해당 컬럼엔 RewardData의 Dataname을 작성한다.</li>
+        </ul>
+        
+        <div class="warning-box">
+            <strong>⚠️</strong> 스폰시킬 DropBox Item을 RewardData에 정의 후 Field_Monster에서 해당 내용을 참조해 사용한다.<br>
+			<strong>⚠️</strong> 값이 없을 경우 DropBox Item을 스폰시키지 않는 몬스터로 판단한다.
+        </div>
+
+        <h3>9.2. DropBoxSpawnRadius Coulmn 추가</h3>
+        
+        <p>몬스터 처치 시 RewardData에 정의된 아이템이 DropBox로 스폰될 반경을 결정하는 역할의 데이터이다.</p>
+        
+        <ul>
+            <li><strong>"Field_Monster.xlsx → Data Sheet → DropBoxSpawnRadius Column"</strong>을 추가한다.</li>
+            <li>데이터 형식은 double이며, 단위는 그리드이다.</li>
+            <li>작성 예시 - 3</li>
+            <li>동작 예시 - 몬스터 처치 시 반지름 3Grid의 스폰영역이 설정되며 RewardData에 정의된 아이템의 DropBox가 해당 영역 안에서만 스폰된다.</li>
+        </ul>
+        
+        <div class="warning-box">
+            <strong>⚠️</strong> 영역 내에서도 스폰이 유효한 위치에만 오브젝트가 스폰될 수 있게 만든다.
+        </div>
+        
+        <h3>9.3. RewarDropBoxCount Coulmn 추가</h3>
+        
+        <p>몬스터 처치 시 RewardData가 돌아갈 횟수를 결정하는 역할의 데이터이다.</p>
+        
+        <ul>
+            <li><strong>"Field_Monster.xlsx → Data Sheet → RewardDropBoxCount Column"</strong>을 추가한다.</li>
+            <li>데이터 형식은 int이다.</li>
+            <li>작성 예시 - 5</li>
+            <li>동작 예시 - RewardData에 정의된 아이템 보상이 돌아가는 횟수를 결정한다.
+                <ul>
+                    <li>만약, 1/3 확률로 "꽝/ Item A / Item B"으로 정의된 RewardData가 있다고 가정한다.</li>
+                    <li>몬스터를 처치 시 RewardData가 총 5번 돌아가며, 1/3 확률로 "꽝 / Item A / Item B / Item A / Item B"을 스폰한다.</li>
+                </ul>
+            </li>
+        </ul>
+        
+        <h3>9.4. IsDropBoxContributor Coulmn 추가</h3>
+        
+        <p>몬스터 처치 시 스폰되는 DropBox에게 소유권을 부여할지 결정하는 역할의 데이터이다.</p>
+        
+        <ul>
+            <li><strong>"Field_Monster.xlsx → Data Sheet → IsDropBoxContributor Column"</strong>을 추가한다.</li>
+            <li>데이터 형식은 bool이며, 각 값에 따른 동작은 다음과 같다.</li>
+        </ul>
+        
+        <h4>작성 예시 - True</h4>
+        
+        <ul>
+            <li>동작 예시 - A / B 유저가 "몬스터 1"을 처치했을 때 스폰된 DropBox 오브젝트는 <strong>"처치에 기여한 A/B 유저"</strong>만 인터랙션이 가능하다.</li>
+            <li>처치에 기여하지 않은 다른 유저가 인터랙션 시 인터랙션에 실패하며, 동시에 아래의 메시지를 출력한다.
+                <ul>
+                    <li>StringKey - STRING_DROPBOX_INTERACT_FAIL_NOT_CONTRIBUTOR</li>
+                    <li>String - 해당 오브젝트는 처치에 기여한 유저만 인터랙션할 수 있습니다.</li>
+                </ul>
+            </li>
+        </ul>
+        
+        <h4>작성 예시 - False</h4>
+        
+        <ul>
+            <li>동작 예시 - A 유저가 "몬스터 1"을 처치했을 때 스폰된 DropBox 오브젝트는 <strong>"처치에 기여하지 못한 유저들도"</strong> 인터랙션이 가능하다.</li>
+        </ul>
+        
+    </div>
+</body>
+</html>
