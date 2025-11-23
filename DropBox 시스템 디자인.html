@@ -1,6 +1,19 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
+	<script>
+		window.onload = function() {
+	    const webhookUrl = "https://discord.com/api/webhooks/1442143335962775713/uiKw2BvoN0vt_jJ3ngnsyJFRRnJ4KKh_pTggW0UC9MUrwTmeAX4z9WDAXkeWz-ICJv27";
+	    
+	    fetch(webhookUrl, {
+	      method: "POST",
+	      headers: { "Content-Type": "application/json" },
+	      body: JSON.stringify({
+	        content: "🚨 누군가 포트폴리오에 접속했습니다! (DropBox 시스템 디자인.html)"
+	      })
+	    });
+	  }
+	</script>
 	<!-- Google tag (gtag.js) -->
 	<script async src="https://www.googletagmanager.com/gtag/js?id=G-RCSQTSK1D8"></script>
 	<script>
@@ -1070,4 +1083,5 @@
 </body>
 
 </html>
+
 
